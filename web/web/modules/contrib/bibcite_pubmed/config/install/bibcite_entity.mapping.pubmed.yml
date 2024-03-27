@@ -1,0 +1,81 @@
+format: pubmed
+types:
+  Autobiography:
+  Bibliography:
+  Biography:
+  Case Reports:
+  Classical Article:
+  Clinical Conference:
+  Clinical Study:
+  Clinical Trial:
+  Clinical Trial, Phase I:
+  Clinical Trial, Phase II:
+  Clinical Trial, Phase III:
+  Clinical Trial, Phase IV:
+  Collected Works:
+  Comparative Study:
+  Congresses:
+  Consensus Development Conference:
+  Consensus Development Conference, NIH:
+  Controlled Clinical Trial:
+  Dataset:
+  Dictionary:
+  Directory:
+  Duplicate Publication:
+  Editorial:
+  Festschrift:
+  Government Publications:
+  Guideline:
+  Historical Article:
+  Interactive Tutorial:
+  Interview:
+  Introductory Journal Article:
+  Journal Article: journal_article
+  Lectures:
+  Legal Cases:
+  Legislation:
+  Letter:
+  Meta-Analysis:
+  Multicenter Study:
+  News:
+  Newspaper Article:
+  Observational Study:
+  Overall:
+  Patient Education Handout:
+  Periodical Index:
+  Personal Narratives:
+  Portraits:
+  Practice Guideline:
+  Pragmatic Clinical Trial:
+  Publication Components:
+  Publication Formats:
+  Publication Type Category:
+  Randomized Controlled Trial:
+  Research Support, American Recovery and Reinvestment Act:
+  Review:
+  Scientific Integrity Review:
+  Study Characteristics:
+  Support of Research:
+  Technical Report:
+  Twin Study:
+  Validation Studies:
+  Video-Audio Media:
+  Webcasts:
+fields:
+  AuthorList: author
+  ArticleTitle: title
+  PublicationType: type
+  KeywordList: keywords
+  Abstract: bibcite_abst_e
+  Year: bibcite_year
+  JournalTitle: bibcite_secondary_title
+  Volume: bibcite_volume
+  Issue: bibcite_issue
+  Pagination: bibcite_pages
+  PubDate: bibcite_date
+  Language: bibcite_lang
+  ISSN: bibcite_issn
+  url: bibcite_custom1
+  doi: bibcite_doi
+  ISOAbbreviation: bibcite_alternate_title
+  PMID: bibcite_pmid

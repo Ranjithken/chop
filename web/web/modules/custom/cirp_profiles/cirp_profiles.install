@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function cirp_profiles_install()
+{
+    // Define a queue for importing nodes.
+    \Drupal::queue('cirp_profiles_import_queue')->createQueue();
+}
+
+
+?>

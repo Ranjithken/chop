@@ -1,0 +1,101 @@
+<?php
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * @file
+ * Functions to support theming in the prepit theme.
+ */
+
+
+/**
+* Implements hook_preprocess_menu() for menu--about--menu.html.twig.
+*/
+function cvp_preprocess_menu(&$variables, $hook) {
+
+  if ($hook == 'menu__about_menu') {
+    $current_path = \Drupal::request()->getRequestUri();
+    $items = $variables['items'];
+    foreach ($items as $key => $item) {
+      // Set active to dom element if path of menu item matches current path
+      if (!$item['in_active_trail']) {
+        $variables['items'][$key]['attributes']->addClass('hidden');
+
+      }
+    }
+  }
+}
+
+/**
+* Implements hook_form_alter()
+* To add placeholder to the site search field and to alter acdtions.
+*/
+function cvp_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+   if ($form_id == 'search_block_form') {
+     $form['keys']['#attributes']['placeholder'] = t( 'Search..' );
+     $form['#action']= '/solr-search';
+ }
+ }
+
+ /**
+* Implements hook_preprocess_block()
+* To add the Banner title dynamically based on Parent item.
+*/
+function cvp_preprocess_block(&$variables) {
+   if ($nodes = \Drupal::request()->attributes->get('node')) {
+     $nid = $nodes->id();
+     $currentnode = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+     $links = $menu_link_manager->loadLinksByRoute('entity.node.canonical', array('node' => $nid));
+     if($links) {
+       foreach($links as $link) {
+       $menu_name = $link->getMenuName();
+       if($menu_name == 'main-navigation') {
+          if($link->getParent()) {
+            $parents = $menu_link_manager->getParentIds($link->getParent());
+            $parents = array_reverse($parents);
+            $parent = reset($parents);
+            $parent = $menu_link_manager->createInstance($parent);
+            $path = $parent->getUrlObject()->toString();
+            $url = trim(str_replace("/cirp/docroot"," ",$path));
+            $path = \Drupal::service('path.alias_manager')->getPathByAlias($url);
+            if(preg_match('/node\/(\d+)/', $path, $matches)) {
+              $parentnode = \Drupal\node\Entity\Node::load($matches[1]);
+            }
+            if(!empty($parentnode->field_inner_banner->target_id)){
+              $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($parentnode->field_inner_banner->entity->getFileUri()));
+            }else if(!empty($currentnode->field_inner_banner->target_id)){
+              $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($currentnode->field_inner_banner->entity->getFileUri()));
+            }else{
+              $field_info = FieldConfig::loadByName('node', 'page', 'field_inner_banner');
+              $image_uuid = $field_info->getSetting('default_image')['uuid'];
+              $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+              $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($image->getFileUri()));
+            }
+            $parent_title = $parent->getTitle();
+            // Add title to variables, can be used on theme templates.
+            $variables['menu_parent_title'] = $parent_title;
+            }else{
+            $parent = $link->getTitle();
+            $variables['menu_parent_title'] = $parent;
+            $path = $link->getUrlObject()->toString();
+            $url = trim(str_replace("/cirp/docroot"," ",$path));
+            $path = \Drupal::service('path.alias_manager')->getPathByAlias($url);
+            if(preg_match('/node\/(\d+)/', $path, $matches)) {
+              $node = \Drupal\node\Entity\Node::load($matches[1]);
+            }
+            if(!empty($node->field_inner_banner->target_id)){
+              $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($node->field_inner_banner->entity->getFileUri()));
+            }else{
+              $field_info = FieldConfig::loadByName('node', 'page', 'field_inner_banner');
+              $image_uuid = $field_info->getSetting('default_image')['uuid'];
+              $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+              $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($image->getFileUri()));
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+name: Convert Media Tags to Markup
+type: module
+description: 'Converts media tags to markup.'
+core_version_requirement: ^9 || ^10
+php: '8.x'
+
+# Information added by Drupal.org packaging script on 2023-03-03
+version: '3.0.2'
+project: 'convert_media_tags_to_markup'
+datestamp: 1677879011

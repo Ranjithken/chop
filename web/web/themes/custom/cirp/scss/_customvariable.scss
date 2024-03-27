@@ -1,0 +1,151 @@
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+//
+// Color system
+//
+
+/* Colors: */
+$primary-color: #d01c65;
+$secondary-color: #005586;
+$secondary-color-dark: #005587;
+$secondary-color-light: #33a0bb;
+$green-color: #799a3e;
+$gray-darker: #9a8b7d;
+$gray-lighter: #665546;
+$gray-dark: #786452;
+$gray-light: #e4e0dc;
+$gray-lighten: #eaf6f9;
+$gray-100: #f2efec;
+$white: #ffffff;
+$primary-linkcolor: #26778b;
+$placeholder-color: #e4e0dc;
+$link-text-color:$primary-linkcolor;
+
+
+// defaultcolors
+$color-primary: $primary-linkcolor !default;
+$blue-dark: $secondary-color-dark !default; // #005587;
+$blue-light: $secondary-color-light !default; // #33a0bb;
+$blue-lighten:$secondary-color-light !default; //#eaf6f9;
+$color-secondary: $secondary-color !default; //#9a8b7d;
+//$gray-dark: $gray-light !default; //#786452;
+$gray-light: $gray-lighten !default; //#e4e0dc;
+//$gray-lighten: $placeholder-color !default; //#f2efec;
+$green: $green-color !default; //#799a3e;
+$green-light: #e2e7cf;
+$pink: $primary-color !default; //#d01c65;
+$pink-light: #fde8f2;
+$headings-color: $secondary-color !default;
+
+$primary: #d01c65;
+$secondary: #005587;
+$success: #799a3e;
+$info: #786452;
+$warning: #9a8b7d;
+$danger: #d01c65;
+$light: #9a8b7d;
+$dark: #9a8b7d;
+$white-color: #ffffff;
+$link-color:#26778b;
+
+$text-color: $color-secondary;
+// Set a specific jump point for requesting color jumps
+$theme-color-interval: 8% !default;
+
+// The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
+$yiq-contrasted-threshold: 150 !default;
+
+// Customize the light and dark text colors for use in our YIQ color contrast function.
+$yiq-text-dark: $dark !default;
+$yiq-text-light: $white-color !default;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-caret: true !default;
+$enable-rounded: true !default;
+$enable-shadows: false !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-hover-media-query: false !default; // Deprecated, no longer affects any compiled CSS
+$enable-grid-classes: true !default;
+$enable-print-styles: true !default;
+
+// custom font imports
+@font-face {
+  font-family: rubrikbold;
+  src: url(../fonts/rubrik-bold-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-bold-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubriklight;
+  src: url(../fonts/rubrik-light-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-light-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubrikmedium;
+  src: url(../fonts/rubrik-medium-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-medium-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubrikregular;
+  src: url(../fonts/rubrik-regular-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-regular-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubriksemibold;
+  src: url(../fonts/rubrik-semibold-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-semibold-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: Georgia, "Times New Roman", Times, serif !default;
+$font-family: rubrikregular !default;
+$font-family-base: rubrikregular !default;
+$font-family-bold: rubrikbold !default;
+$font-family-light: rubriklight !default;
+$font-family-medium: rubrikmedium !default;
+$font-family-semibold: rubriksemibold !default;
+
+// stylelint-enable value-keyword-case
+$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-lg: ($font-size-base * 1.25) !default;
+$font-size-sm: ($font-size-base * 0.875) !default;
+
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+
+$font-weight-base: $font-weight-normal !default;
+$line-height-base: 1.5 !default;
+
+$h1-font-size: $font-size-base * 2.5 !default;//40px
+$h2-font-size: $font-size-base * 1.875 !default;//30px
+$h3-font-size: $font-size-base * 1.25 !default;//20px
+$h4-font-size: $font-size-base * 1.5 !default;//24px
+$h5-font-size: $font-size-base * 1.25 !default;//20px
+$h6-font-size: $font-size-base !default;//16px
+$linkfont-size: 18px !default;//16px
+
+$headings-font-family: $font-family-medium !default;
+$headings-font-weight: 500 !default;
+$headings-color:$secondary-color;
+$headings-line-height: 1.2 !default;

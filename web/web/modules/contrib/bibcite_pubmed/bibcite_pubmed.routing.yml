@@ -1,0 +1,7 @@
+bibcite_pubmed.lookup:
+  path: '/admin/content/bibcite/reference/pmlookup'
+  defaults:
+    _form: '\Drupal\bibcite_pubmed\Form\PubmedLookupForm'
+    _title: 'PubMed lookup'
+  requirements:
+    _permission: 'administer bibcite'

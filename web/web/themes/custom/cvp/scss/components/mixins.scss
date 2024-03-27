@@ -1,0 +1,25 @@
+@mixin heading($font-family,$font-size,$font-color,$padding){
+    font-size:$font-size ;
+    font-family:$font-family ;
+    color:$font-color;
+    padding: $padding;
+}
+
+// Slide
+@-webkit-keyframes slideInUp {
+    from {
+        -webkit-transform: translate3d(0, 20px, 0);
+        transform: translate3d(0, 20px, 0);
+        opacity: 0;
+    }
+
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+.slideInUp {
+    -webkit-animation-name: slideInUp;
+    animation-name: slideInUp;
+}

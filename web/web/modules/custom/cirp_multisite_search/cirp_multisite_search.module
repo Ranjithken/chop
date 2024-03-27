@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Contains cirp_multisite_search.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\Views;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_help().
+ */
+function cirp_multisite_search_help($route_name, RouteMatchInterface $route_match)
+{
+  switch ($route_name) {
+    // Main module help for the cirp_multisite_search module.
+    case 'help.page.cirp_multisite_search':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Multi site search for CIRP sites') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements template_preprocess_views_view().
+ */
+function cirp_multisite_search_preprocess_views_view(&$variables)
+{
+
+  // Retrieve an array which contains the path pieces.
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path == '/solr-search' || $current_path == '/site-search') {
+
+    $variables['url_param'] = 'solr-search';
+    $variables['checked'] = 'checked';
+    if ($current_path == '/solr-search') {
+      $variables['url_param'] = 'site-search';
+      $variables['checked'] = NULL;
+    }
+    $variables['custom_term'] = isset($_GET['keys']) ? $_GET['keys'] : NULL;
+  }
+}
+
+function cirp_multisite_search_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query)
+{
+  // Retrieve an array which contains the path pieces.
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path == '/site-search') {
+    $solarium_query->removeFilterQuery('site_hash');
+    $solarium_query->removeFilterQuery('index_filter');
+  }
+}
+
+
+/**
+ * Implements hook_views_pre_render().
+ */
+
+function cirp_multisite_search_views_pre_render($view)
+{
+
+  if ($view->id() == 'blog_homepage' || $view->id() == 'research_in_action_blog') { // confirm rendering view is belongs to Blog view.
+
+    $results = $view->result;
+
+    //get the Requested URI
+    $current_path = $_SERVER['REQUEST_URI'];
+    if ($current_path == "/blog" || $current_path == "/blog/title=&page=0" || $current_path == "/blog?title=" || $current_path == "/blog?title=&page=0") {
+      //hide the view 1st result to avoid duplicates in the page, for only above mentioned paths in the if condition
+      unset($view->result[0]);
+    }
+  }
+}

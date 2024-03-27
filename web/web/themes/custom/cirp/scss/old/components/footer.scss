@@ -1,0 +1,144 @@
+footer,
+.footer-content {
+  background: $color-secondary;
+  padding: 75px 0 40px 0;
+
+  nav {
+    &.block-menu {
+      &:first-child {
+        ul {
+          li {
+            a {
+              &.nav-link {
+                font-weight: 500;
+              }
+            }
+          }
+        }
+      }
+
+      ul {
+        li {
+          a {
+            &.nav-link {
+              color: #ffffff;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    h5 {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: bold;
+    }
+  }
+
+  #block-footerlogo {
+    img {
+      max-width: 100%;
+    }
+
+    p {
+      color: #ffffff;
+      font-size: 14px;
+      // font-family: $font-family;
+
+      &:last-child {
+        img {
+          margin-right: 15px;
+        }
+      }
+    }
+  }
+
+  #block-footerlinks {
+    li {
+      a {
+        font-weight: bold;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    nav {
+      &.block-menu {
+        width: 100%;
+        float: left;
+        padding: 0 15px;
+      }
+    }
+  }
+}
+
+footer {
+  font-family: rubrikregular;
+
+  .footer-logo {
+    max-width: 222px;
+  }
+
+  .site-address {
+    // font-family: rubrikregular;
+    color: #ffffff;
+    margin-bottom: 40px;
+    margin-top: 40px;
+  }
+
+  .subscribe-title {
+    margin-bottom: 0;
+    font-family: rubrikregular;
+  }
+
+  .footer-icons {
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+    }
+  }
+}
+
+#block-copyrighttext {
+  display: inline-block;
+  font-size: 14px;
+  // font-family: rubrikregular, Arial, sans-serif;
+  margin-top: 4px;
+
+  p {
+    font-size: 14px;
+    // font-family: rubrikregular, Arial, sans-serif;
+    color: #ffffff;
+  }
+}
+
+#block-footerlinks {
+  ul {
+    li {
+      display: inline-block;
+
+      > a {
+        font-size: 14px;
+        // font-family: rubrikregular;
+        color: #ffffff;
+        font-weight: 100;
+      }
+    }
+  }
+}
+
+#block-footersection {
+  .navbar-nav {
+    li {
+      a {
+        font-family: rubriksemibold;
+      }
+    }
+  }
+}
+
+nav#block-youtubechannels ul li {
+  padding: 0 20px 0 0;
+}

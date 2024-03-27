@@ -1,0 +1,4 @@
+ckeditor_exclude_tags:
+  version: VERSION 
+  js:
+    js/ckeditor_exclude_tags.js: {}

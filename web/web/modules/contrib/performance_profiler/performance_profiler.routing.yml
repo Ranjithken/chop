@@ -1,0 +1,30 @@
+performance_profiler.settings:
+  path: '/admin/config/development/performance-profiler'
+  defaults:
+    _form: '\Drupal\performance_profiler\Form\PerformanceProfilerForm'
+    _title: 'Performance profiler settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+performance_profiler.run:
+  path: '/admin/config/development/performance-profiler/run'
+  defaults:
+    _form: '\Drupal\performance_profiler\Form\PerformanceProfilerRunForm'
+    _title: 'Performance profiler run'
+  requirements:
+    _permission: 'administer site configuration'
+
+performance_profiler.database:
+  path: '/admin/config/development/performance-profiler/database'
+  defaults:
+    _form: '\Drupal\performance_profiler\Form\PerformanceProfilerDbForm'
+    _title: 'Performance profiler database'
+  requirements:
+    _permission: 'administer site configuration'
+
+performance_profiler.ajax_performance_data:
+  path: '/performance-profiler/ajax/performance-data'
+  defaults:
+    _controller: 'Drupal\performance_profiler\Controller\AjaxPerformanceData::get'
+  requirements:
+    _permission: 'access performance profiler'

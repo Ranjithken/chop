@@ -1,0 +1,280 @@
+main{
+    &.container-fluid{
+        margin-bottom:280px;
+        padding-left:0;
+        padding-right:0
+    }
+}
+#block-views-block-related-content-block-1{
+    .block-title{
+        @extend .container;
+        h2{
+            @extend .border-top;
+            padding-top:60px;
+            font-family: $font-family-medium;
+        }
+    }
+}
+
+.block-title{
+    margin-top: 60px;
+    margin-bottom:20px;
+}
+
+#block--ResearchInAction{
+    .block-title{
+        display: none;
+    }
+}
+
+//research page
+.innerpadding {
+    h2 {
+        text-transform: uppercase;
+        text-align: left;
+        font-family: $font-family-medium;
+        color: $blue-dark;
+    }
+    h3{
+        font-family: $font-family-medium;
+    }
+    h4{
+        font-family: $font-family-medium;
+    }
+
+    p {
+        font-size: 1.1rem;
+        font-family: $font-family-sans-serif;
+        font-weight: $font-weight-base;
+        color: $gray-dark;
+        line-height: 1.4;
+    }
+    .pb-30 {
+        padding-bottom: 30px;
+    }
+    a{
+        text-decoration: none;
+    }
+}
+.page-node-type-profile{
+    .bs-region {
+        &.bs-region--left{
+            #profile-title{
+                display: block;
+                margin: 35px 0;
+                >span{
+                    @extend h2;
+                    color:$color-secondary;
+                    text-transform: uppercase;
+                }
+            }
+            #profile-image{
+                display: inline-block;
+                max-width: 240px;
+                margin-right:15px;
+                float: left;
+                margin: 0 1em 0 0;
+                 img{
+                    width:auto;
+                    height:auto;
+                    max-width: 100%;
+                    max-height: 320px;
+                    margin-bottom: 10px;
+                }
+            }
+            #profile-subheading{
+                div{
+                    font-size: 1.18rem;
+                    font-family: rubrikregular;
+                    padding: 0;
+                    margin: 0;
+                    margin: -10px 0 0 0;
+                }
+            }
+            #profile-content{
+                margin-top:15px;
+            }
+        }
+    }
+}
+
+.addtoany_list{
+    margin: 20px 0 0;
+}
+.path-node{
+    .bs-region {
+        &.bs-region--left{
+            #block--Title{
+                display: block;
+                margin: 20px 0;
+                > span{
+                    @extend h1;
+                    font-size: 1.875rem;
+                    color:$color-primary;
+                }
+            }
+            #block--Body{
+                clear: both;
+                margin-top: 30px;
+                float: left;
+                word-break: break-word;
+                .img-right{
+                    float: right;
+                }
+            }
+            #block--Authoredon{
+                span{
+                    padding-left: 5px;
+                    position: relative;
+                    font-family: $font-family-medium;
+                    &:before{
+                        content: 'Published on';
+                        position: relative;
+                        padding-right: 5px;
+                        left: 0;
+                    }
+                    &:after{
+                        content: 'in Research In Action';
+                        position: relative;
+                        padding-left: 5px;
+                        left: 0;
+                    }
+                }
+            }
+            #block--Authoredby{
+                span{
+                    a{
+                        padding-left: 0;
+                        position: relative;
+                        font-style: italic;
+                        padding-top: 20px;
+                        float: left;
+                        &:before{
+                            content: 'By';
+                            position: relative;
+                            padding-right: 5px;
+                            left: 0;
+                        }
+                    }
+                }
+            }
+            h2{
+                font-family: rubrikmedium;
+                color: $color-primary;
+            }
+        }
+
+    }
+}
+
+
+.bloglist-view,.news{
+    header{
+        margin-bottom:60px;
+        padding-top:0;
+    }
+    .border-top{
+        border-top:1px solid $gray-light!important;
+        padding: 10px 15px;
+    }
+    .views-row{
+        border-top:0.5px solid $gray-light;
+        clear: both;
+        float: left;
+        padding: 20px;
+        width:100%;
+        .views-field-field-image{
+            float: left;
+            margin-right: 20px;
+        }
+        .views-field-created{
+            margin: 0 0 10px 0;
+        }
+        .views-field-created{
+            padding-left: 3px;
+            position: relative;
+            font-family: rubrikmedium;
+            .field-content{
+                 font-family: rubrikregular;
+                 font-size: 1.125rem;
+                 a{
+                    font-size: 1.125rem;
+                    color:$primary-linkcolor!important;
+                 }
+            }
+        }
+        .body-content{
+            .left{
+                a{
+                    background:$pink;
+                    border-color:$pink;
+                    padding:10px 20px;
+                    color: #ffffff;
+                    font-family: rubrikregular;
+                    margin-top: 30px;
+                    display: block;
+                    width: -webkit-fit-content;
+                    width: -moz-fit-content;
+                    width: fit-content;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+.bloglist-view{
+    .custom-viewTitle{
+        h2{
+            @extend h1;
+            margin-top:35px;
+            margin-bottom:35px;
+            font-family: rubrikregular;
+        }
+    }
+}
+.news{
+    .views-field-created{
+        .field-content{
+            &:before{
+                width: 24px;
+                height: 22px;
+                margin-right: 6px;
+                background: url(../images/icons/Calendar.svg);
+                float: left;
+                background-repeat: no-repeat;
+                content: '';
+                background-size: auto;
+            }
+
+        }
+    }
+    .views-field-uid{
+        .field-content{
+            display: inline-block;
+            &:before{
+                width: 24px;
+                height: 22px;
+                margin-right: 6px;
+                float: left;
+                background-repeat: no-repeat;
+                content: '-';
+                background-size: auto;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                    -ms-flex-align: center;
+                        align-items: center;
+                -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                        justify-content: center;
+            }
+        }
+    }
+}
+
+//teen driving
+*:focus {
+    outline: none !important;
+}

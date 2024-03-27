@@ -1,0 +1,4 @@
+access performance profiler:
+  description: 'View performance profiler debug output.'
+  title: 'Access performance profiler information'
+  restrict access: TRUE

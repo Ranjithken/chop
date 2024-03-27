@@ -1,0 +1,31 @@
+name: CVP
+description: Child theme of CIRP
+type: theme
+# core: 8.x
+# Defines the base theme
+core_version_requirement: ^9 || ^10
+base theme: cirp
+
+libraries:
+  - cvp/global-css
+  - cvp/global-js
+
+regions:
+  top_menu: 'Top Menu'
+  header: 'Header'
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  featured: 'Featured'
+  breadcrumb: 'Breadcrumb'
+  content: 'Content'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer: 'Footer'
+  footer_first:  'Footer first'
+  footer_second: 'Footer second'
+  footer_third:  'Footer third'
+  footer_fourth: 'Footer fourth'
+  copyright: 'Copyright'
+

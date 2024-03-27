@@ -1,0 +1,13 @@
+ckeditor_bootstrap_grid_two_columnn_grid:
+  ckeditor5:
+    plugins:
+      - simpleGrid.SimpleGrid
+  drupal:
+    label: Simple Grid
+    library: ckeditor_bootstrap_grid/ckeditor_bootstrap_grid
+    admin_library: ckeditor_bootstrap_grid/admin.ckeditor_bootstrap_grid
+    toolbar_items:
+      SimpleGrid:
+        label: Simple Grid
+    elements:
+      - <div class data-*>

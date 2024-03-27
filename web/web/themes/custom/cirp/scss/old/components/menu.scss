@@ -1,0 +1,312 @@
+// Base class
+//
+// Kickstart any navigation component with a set of style resets. Works with
+// `<nav>`s or `<ul>`s.
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+  }
+
+  .nav-link {
+    display: block;
+    color:$gray-dark;
+    font-family: $font-family;
+    padding: $nav-link-padding-y $nav-link-padding-x;
+    text-transform: uppercase;
+
+    @include hover-focus {
+      text-decoration: none;
+    }
+
+    // Disabled state lightens text
+    &.disabled {
+      color: $nav-link-disabled-color;
+    }
+  }
+
+  //
+  // Tabs
+  //
+
+  .nav-tabs {
+    border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+
+    .nav-item {
+      margin-bottom: -$nav-tabs-border-width;
+    }
+
+    .nav-link {
+      border: $nav-tabs-border-width solid transparent;
+      @include border-top-radius($nav-tabs-border-radius);
+
+      @include hover-focus {
+        border-color: $nav-tabs-link-hover-border-color;
+      }
+
+      &.disabled {
+        color: $nav-link-disabled-color;
+        background-color: transparent;
+        border-color: transparent;
+      }
+    }
+
+    .nav-link.active,
+    .nav-item.show .nav-link {
+      color: $nav-tabs-link-active-color;
+      background-color: $nav-tabs-link-active-bg;
+      border-color: $nav-tabs-link-active-border-color;
+    }
+
+    .dropdown-menu {
+      // Make dropdown border overlap tab border
+      margin-top: -$nav-tabs-border-width;
+      // Remove the top rounded corners here since there is a hard edge above the menu
+      @include border-top-radius(0);
+    }
+  }
+
+
+  //
+  // Pills
+  //
+
+  .nav-pills {
+    .nav-link {
+      @include border-radius($nav-pills-border-radius);
+    }
+
+    .nav-link.active,
+    .show > .nav-link {
+      color: $nav-pills-link-active-color;
+      background-color: $nav-pills-link-active-bg;
+    }
+  }
+
+
+  //
+  // Justified variants
+  //
+
+  .nav-fill {
+    .nav-item {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+
+  .nav-justified {
+    .nav-item {
+      flex-basis: 0;
+      flex-grow: 1;
+      text-align: center;
+    }
+  }
+
+
+  // Tabbable tabs
+  //
+  // Hide tabbable panes to start, show them when `.active`
+
+  .tab-content {
+    > .tab-pane {
+      display: none;
+    }
+    > .active {
+      display: block;
+    }
+  }
+  .navbar{
+    padding: 0 1rem 20px 0;
+      .nav-item{
+        a{
+          padding:0 30px ;
+          &.is-active,&:hover{
+            color:$link-color;
+          }
+        }
+      }
+  }
+
+  //  Side Bar Styling
+.sidebar{
+  >*{
+    margin-bottom: 30px;
+  }
+  .block-menu{
+    background-color: #F2EFEC;
+    padding: 0px 0 15px;
+    h5{
+      background:$pink;
+      padding: 13px 30px;
+      color: #ffffff;
+      margin: 0;
+    }
+    .navbar-nav{
+      margin: 0;
+      li{
+        &.nav-item{
+          font-size: 16px;
+        }
+        a{
+          &.nav-link{
+           padding:8px 10px 8px 30px;
+          }
+          &.active{
+            background-color: #E4E0DC;
+            border-left: 8px solid #D01C65;
+            cursor: pointer;
+            margin-left: -8px;
+            color: #786452;
+          }
+          &:hover,&:focus,&:active{
+            background-color: #E4E0DC;
+            border-left: 8px solid #D01C65;
+            cursor: pointer;
+            margin-left: -8px;
+            color: #786452;
+          }
+        }
+      }
+    }
+  }
+}
+//  Side Bar Styling
+
+//  CTA LINKS Styling
+.menu--cta-links{
+  &.block-menu{
+      .menu{
+          &.navbar-nav{
+              flex-direction: inherit;
+          }
+          .nav-item{
+              width: 50%;
+              float: left;
+              padding: 0px 15px 0 0;
+              display: flex;
+              align-items: center;
+              margin-bottom: 0;
+              .nav-link{
+                  padding-left:40px;
+                  color:$color-primary;
+                  line-height: initial;
+              }
+          }
+      }
+  }
+}
+
+// pager
+.pagination,.pager{
+
+  li{
+    a {
+      span {
+        display: none;
+      }
+    }
+  }
+  .pager__item--ellipsis{
+    display:none;
+  }
+   .pager__item--first{
+      a{
+        color:#26778b!important;
+       &:first-child{
+         display: none;
+       }
+     }
+    a::after {
+      font-size: 17px;
+      font-family: "FontAwesome";
+      content: '\f048';
+      font-weight: 900;
+    }
+   }
+
+  .pager__item--previous{
+    a{
+
+      color:#26778b!important;
+    }
+    a::after {
+      font-size: 25px;
+      font-family: "FontAwesome";
+      content: '\f0d9';
+      font-weight: 900;
+      line-height: 32px;
+    }
+  }
+   .pager__item--next {
+     a{
+
+      color:#26778b!important;
+     }
+      a::before {
+        font-size: 25px;
+        font-family: "FontAwesome";
+        content: '\f0da';
+        font-weight: 900;
+        line-height: 32px;
+      }
+    }
+    .pager__item--last{
+      a{
+
+        color:#26778b!important;
+      }
+      a::before {
+        font-size: 17px;
+        font-family: "FontAwesome";
+        content: '\f051';
+        font-weight: 900;
+    line-height: normal;
+      }
+    }
+
+
+}
+
+.pager__items{
+  margin-left: -42px;
+  li{
+    margin-right:15px;
+    &:last-child{
+      margin-right:0;
+    }
+    a{
+      font:  16px/19px rubrikregular;
+      color:#ffffff;
+    }
+    &.btn-light {
+      color: #786452;
+      background: #E3DDD7;
+      cursor: default;
+      border: 1px solid #E3DDD7;
+      height: 36px;
+      padding: 0 1em;
+      font-size: 0.85714em;
+      line-height: 2.5em;
+      font-family: rubrikregular,Arial,sans-serif;
+      cursor: pointer;
+      a{
+       color: #786452;
+       line-height: initial;
+      }
+    }
+    &.btn-light:not(:disabled):not(.disabled):active,
+    &.btn-light:not(:disabled):not(.disabled).active,
+    .show > &.btn-light.dropdown-toggle{
+      background: $pink;
+      border-color: $pink;
+      a{
+        color: #ffffff;
+       }
+    }
+  }
+}
+

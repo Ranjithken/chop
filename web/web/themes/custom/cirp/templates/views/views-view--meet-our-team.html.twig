@@ -1,0 +1,123 @@
+{#
+/**
+ * @file
+ * Theme override for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ */
+#}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<div class="inner-banner row inner-profilebanner meetourteampage">
+    <div class="container-fluid">
+      <div class="layout row">
+        <div></div>
+       </div>
+    </div>
+  </div>
+ <div class="container">
+    <div class="layout row">
+      <div class="col-12 col-lg-8 bs-region bloglist-view">
+	  
+	        {% set current_url = url('<current>') %}
+              {% if '/meet-our-team/role/' not in current_url|render|render %}
+			  {{ drupal_block('system_breadcrumb_block') }}
+	        {% else %}
+			<div data-block-plugin-id="system_breadcrumb_block" id="block--Breadcrumbs">
+				<nav aria-label="breadcrumb" class="container">
+					<h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/">Home</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/about-cirp">About CIRP</a>
+						</li>
+                        <li class="breadcrumb-item">
+							<a href="/meet-our-team">Meet our Team</a>
+						</li>						
+						
+					</ol>
+				</nav>
+			</div>
+			{% endif %}
+		
+          <div{{ attributes.addClass(classes) }}>
+              {{ title_prefix }}
+              {{ title }}
+              {{ title_suffix }}
+
+              {% if header %}
+                <header>
+                  {{ header }}
+                </header>
+              {% endif %} 
+		     {% set site_url = path('<current>') %}
+              {% if site_url == '/meet-our-team' %}
+              {{ drupal_view('leadership','block_2') }}
+			   {% elseif site_url == '/meet-our-team/cirp-role/leadership-core' %}
+			   {{ drupal_view('leadership','block_1') }}
+			   {% endif %}
+              {% if rows -%}
+                {{ rows }}
+              {% elseif empty -%}
+                {{ empty }}
+              {% endif %}
+ 
+            </div>
+
+      </div>
+       <div class="d-lg-block col-12 col-lg-4 bs-region bs-region--right sidebar teamblock">
+              <div>
+                {{ exposed }}
+              </div>
+			   <div class="block block-menu navigation menu--about-menu">
+                {{ drupal_menu('about-menu') }}
+              </div>
+			   <div class="years-list">
+			    <h3> Filter by CIRP Role</h3>
+			  {{ drupal_view('meet_our_team_by_cirp_role','block_1') }}
+			  </div>
+			   <div class="years-list">
+			    <h3> Filter by Program Affliation</h3>
+			  {{ drupal_view('meet_our_team_by_program_affiliation','block_1') }}
+			   </div>
+			   <div class="years-list">
+			   <h3> Filter by Area of focus</h3>
+			  {{ drupal_view('meet_our_team_by_area_of_focus','block_1') }}
+			  </div>
+				 {{ drupal_entity('block_content', '27') }}
+                 {{ drupal_entity('block_content', '35') }}
+                 
+				 
+
+      </div>
+    </div>
+  </div>

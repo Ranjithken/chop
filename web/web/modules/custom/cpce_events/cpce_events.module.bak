@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * Contains cpce_events.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\cpce_events\Controller\EventsAPIController;
+
+
+/**
+ * Implements hook_help().
+ */
+function cpce_events_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the cpce_events module.
+    case 'help.page.cpce_events':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Merge events from Events API to Drupal') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+function cpce_events_cron() {
+  // Numeric representation of the week. 0 - sun, 6 -sat.
+  $day = date('w');
+  $current_day= date('Ymd');
+  $last_run = \Drupal::state()->get('events.last_run', 0);
+  // Run if today is Sunday.
+  if ($day == 0 && $last_run != $current_day) {
+    $api = new EventsAPIController();
+    $events_data = $api->fetchEventsapi();
+    $event_ids = $events_data['event_ids'];
+    $events = $events_data['events'];
+    $data = $api->getMatchedevents($event_ids);
+    $matched = [];
+    $tobe_updated = NULL;
+    if ($data != NULL) {
+      $seperated_data = $api->seperateData($data);
+      $matched = $seperated_data['matched'];
+      $tobe_updated = $seperated_data['updated'];
+    }
+    $tobe_inserted = array_diff($event_ids, $matched); 
+    $api->createEvents($events, $tobe_inserted);
+    if ($tobe_updated != NULL) {
+      \Drupal::logger('events')->notice('Events have been updated from the Events API');
+      $api->updateEvents($events, $tobe_updated);
+    }
+     \Drupal::state()->set('events.last_run', $current_day);
+  }
+
+}

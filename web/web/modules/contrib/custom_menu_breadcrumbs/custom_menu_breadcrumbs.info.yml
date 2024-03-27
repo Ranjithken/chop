@@ -1,0 +1,12 @@
+name: Custom Menu Breadcrumbs
+type: module
+description: Provides a flexible way to set breadcrumbs for node and user without adding into menu
+# core: 8.x
+configure: custom_menu_breadcrumbs.form
+dependencies:
+ - menu_breadcrumb
+# Information added by Drupal.org packaging script on 2018-07-17
+version: '8.x-1.0'
+core_version_requirement: ^9 || ^10
+project: 'custom_menu_breadcrumbs'
+datestamp: 1531804124

@@ -1,0 +1,135 @@
+{#
+/**
+ * @file
+ * Theme override for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ */
+#}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<div class="inner-banner row inner-profilebanner whatsnew">
+    <div class="container-fluid">
+      <div class="layout row">
+        <div></div>
+       </div>
+    </div>
+  </div>
+ <div class="container">
+    <div class="layout row">
+    <div class="col-12">
+            {{ drupal_block('system_breadcrumb_block') }}
+    </div>
+      <div class="col-12 col-lg-8 bs-region">
+        <div class="custom-viewTitle">
+          <h2 class="text-uppercase mt-0">{{ view.title }}</h2>
+        </div>
+          <div{{ attributes.addClass(classes) }}>
+              {{ title_prefix }}
+              {{ title }}
+              {{ title_suffix }}
+
+              {% if header %}
+                <header class="pt-0">
+                  {{ header }}
+				  <div class="featured-block">
+            <h3 class="pt-40 pb-0 mt-0 h4">Press Releases</h3>
+				     {{ drupal_view('featured_press_release','block_1') }}
+          </div>
+          <h4 class="pt-0 pb-20 mb-0">More Releases</h4>
+                </header>
+              {% endif %}
+
+
+              {% if footer %}
+                <footer class="col-12 clearfix border-top">
+                    {{ footer }}
+                </footer>
+             {% endif %}
+
+
+              {% if rows -%}
+
+                {{ rows }}
+
+			<a class="btn btn-primary text-white mb-20" href="press-room/press-releases" target="_blank"> View Other Releases </a>
+              {% elseif empty -%}
+                {{ empty }}
+              {% endif %}
+
+
+              <div class="py-20 pb-0">
+                <h4>In The News</h4>
+                 {{ drupal_view('whats_new_in_the_news','block_1') }}
+              </div>
+
+
+				<div class="py-20 pt-0">
+				<h4  class="">More Headlines</h4>
+					{{ drupal_view('more_headlines','block_1') }}
+				 </div>
+
+				<div class="py-20 pb-0">
+				<h4>Research In Action Blog</h4>
+					{{ drupal_view('whats_new_research_in_action_blog','block_1') }}
+				</div>
+				<div class="pb-20">
+					<h4  class=" ">More Posts</h4>
+					{{ drupal_view('more_posts','block_1') }}
+				</div>
+              {% if footer %}
+                <footer class="col-12 clearfix">
+                  {{ footer }}
+                </footer>
+
+              {{ pager }}
+
+
+
+              {% endif %}
+
+              {{ feed_icons }}
+            </div>
+
+      </div>
+       <div class="d-lg-block col-12 col-lg-4 bs-region bs-region--right sidebar">
+			  <div class="block block-menu navigation menu--about-menu">
+                {{ drupal_menu('about-menu') }}
+              </div>
+              <div>
+                {{ exposed }}
+              </div>
+
+                 {{ drupal_entity('block_content', '27') }}
+                 {{ drupal_entity('block_content', '26') }}
+
+      </div>
+    </div>
+  </div>

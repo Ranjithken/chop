@@ -1,0 +1,11 @@
+name: 'Production Check'
+type: 'module'
+description: "Check a site to see if it's properly setup for production use."
+package: Monitoring
+core_version_requirement: ^8.9 || ^9 || ^10
+configure: prod_check.report
+
+# Information added by Drupal.org packaging script on 2023-05-04
+version: '2.0.0-beta1'
+project: 'prod_check'
+datestamp: 1683208857

@@ -1,0 +1,372 @@
+<?php
+
+/**
+ * @file
+ * Module to log page build time and peak memory usage.
+ */
+
+use Drupal\Component\Utility\Timer;
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_theme().
+ */
+function performance_profiler_theme(): array {
+  return [
+    'performance_profiler_toolbar' => [
+      'variables' => [
+        'data' => [],
+        'path' => NULL,
+        'short_message' => NULL,
+      ],
+    ],
+    'performance_profiler_benchmark_php' => [
+      'variables' => [
+        'value' => [],
+      ],
+    ],
+    'performance_profiler_benchmark_db' => [
+      'variables' => [
+        'value' => [],
+      ],
+    ],
+    'performance_profiler_benchmark_db_actions' => [
+      'variables' => [
+        'value' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Runs on shutdown to log time and peak memory usage.
+ */
+function performance_profiler_shutdown() {
+  // Register one more function, to run the last.
+  drupal_register_shutdown_function('performance_profiler_shutdown_final');
+}
+
+/**
+ * Runs on shutdown to log time and peak memory usage.
+ */
+function performance_profiler_shutdown_final() {
+  $site_config = \Drupal::config('performance_profiler.settings');
+  // Log self query.
+  if (!$site_config->get('self')
+    && \Drupal::routeMatch()->getRouteName() == 'performance_profiler.ajax_performance_data') {
+    return;
+  }
+
+  // Log any ajax query.
+  if (!$site_config->get('ajax')) {
+    $request = \Drupal::request();
+    $is_ajax = $request->isXmlHttpRequest();
+    if ($is_ajax) {
+      return;
+    }
+  }
+
+  $path = \Drupal::service('path.current')->getPath();
+  $alias = \Drupal::service('path_alias.manager')->getAliasByPath($path);
+
+  $account = \Drupal::currentUser();
+
+  Timer::stop('performance_profiler');
+  $memory_peak = round(memory_get_peak_usage() / 1024 / 1024, 2);
+  $run_time = round(Timer::read('performance_profiler') / 1000, 3);
+
+  // If we don't log anything for anonymous.
+  if ($account->isAnonymous()
+    && (!$site_config->get('anonymous') || !$site_config->get('watchdog'))) {
+    return;
+  }
+
+  // Memory or time limit.
+  $time = $site_config->get('time');
+  $memory = $site_config->get('memory');
+
+  $skip_time = (is_numeric($time) && $time > 0 && $run_time < $time);
+  $skip_memory = (is_numeric($memory) && $memory > 0 && $memory_peak < $memory);
+  if ($skip_time && $skip_memory) {
+    return;
+  }
+
+  // @todo Check if it is correct data and improve.
+  if (\Drupal::hasService('memcache.factory')) {
+    $memcache = \Drupal::service('memcache.factory')->get(NULL, TRUE);
+    $memcache_stats = $memcache->requestStats();
+    if (!empty($memcache_stats['ops'])) {
+      $memcache_time = 0;
+      foreach ($memcache_stats['ops'] as $stats) {
+        $memcache_time += $stats[1];
+      }
+      $memcache_time = round($memcache_time / 1000, 3);
+    }
+  }
+
+  if ($site_config->get('database')) {
+    $db_results = performance_profiler_db_get_results();
+  }
+
+  $ajax_elem = [
+    'short' => "{$run_time}s {$memory_peak}Mb",
+    'long' => [
+      'run_time' => $run_time,
+      'memcache_time' => $memcache_time ?? NULL,
+      'memory_peak' => $memory_peak,
+      'path' => $path,
+      'alias' => $alias,
+    ],
+    'db' => $db_results['info'] ?? [],
+    'db_details' => $db_results['details'] ?? [],
+  ];
+
+  // Watchdog.
+  if ($site_config->get('watchdog')) {
+    $message = [];
+    $message[] = t('<b>@run_time</b>s', [
+      '@run_time' => $run_time,
+    ])->__toString();
+    if (!empty($memcache_time)) {
+      $message[] = t('(MC: <b>@memcache_time</b>s)', [
+        '@memcache_time' => $memcache_time,
+      ])->__toString();
+    }
+    $message[] = t('<b>@memory_peak</b> Mb - <b>@path</b>', [
+      '@memory_peak' => $memory_peak,
+      '@path' => $path,
+    ])->__toString();
+    $message = implode(' ', $message);
+    $message = ($alias != $path) ? "{$message} ($alias)" : $message;
+
+    if (!empty($db_results['info'])) {
+      $db_info = $db_results['info'];
+      $db_message = [];
+
+      $db_message[] = t('Database queries:')->__toString();
+      $db_message[] = t('@type - <b>@time</b>s (@count) / <b>@average_time</b> ms/query', [
+        '@type' => t('total'),
+        '@time' => $db_info['time'],
+        '@count' => $db_info['count'],
+        '@average_time' => $db_info['avg'],
+      ])->__toString();
+      if (!empty($db_info['count'])) {
+        $db_message[] = t('@type - <b>@time</b> sec. (@count) / <b>@average_time</b> ms/query', [
+          '@type' => t('read'),
+          '@time' => $db_info['read_time'],
+          '@count' => $db_info['read_count'],
+          '@average_time' => $db_info['read_avg'],
+        ])->__toString();
+        $db_message[] = t('@type - <b>@time</b> sec. (@count) / <b>@average_time</b> ms/query', [
+          '@type' => t('write'),
+          '@time' => $db_info['write_time'],
+          '@count' => $db_info['write_count'],
+          '@average_time' => $db_info['write_avg'],
+        ])->__toString();
+        $db_message[] = t('write in % - <b>@time</b>% (@count%)', [
+          '@time' => $db_info['write_p'],
+          '@count' => $db_info['write_p_c'],
+        ])->__toString();
+      }
+
+      $message .= '<br>' . implode('<br>', $db_message);
+    }
+    \Drupal::logger('performance_profiler')->debug($message);
+  }
+
+  // Toolbar or popup.
+  if (($site_config->get('toolbar') || $site_config->get('popup')) && $account->hasPermission('access performance profiler')) {
+    $uuid = session_id();
+    $tempstore = \Drupal::service('tempstore.private')->get("performance_profiler_$uuid");
+    $storage = $tempstore->get('storage');
+    $storage = $storage ?? [];
+    $storage[$path] = $ajax_elem;
+    $tempstore->set('storage', $storage);
+  }
+}
+
+/**
+ * Get and formatting database profiling results.
+ */
+function performance_profiler_db_get_results(): array {
+  $time = $read_time = $read_count = 0;
+  $logs = Database::getLog('performance_profiler_db');
+  $count = count($logs);
+  $modules = [];
+  foreach ($logs as $log) {
+    $log_time = $log['time'];
+    $time += $log_time;
+
+    if (strpos($log['query'], 'SELECT') === 0) {
+      $read_time += $log_time;
+      $read_count++;
+    }
+    if (!empty($log['caller']['file'])) {
+      $module = str_replace(DRUPAL_ROOT, '', $log['caller']['file']);
+      $module = preg_replace('/\/src(\/.*|$)/', '', $module);
+      $module = explode('/', $module);
+      $last = array_pop($module);
+      // Exclude file with extension, like .php, .module and etc.
+      if (!strpos($last, '.')) {
+        $module[] = $last;
+      }
+      $module = implode('/', $module);
+      if (!isset($modules[$module]['time'])) {
+        $modules[$module]['time'] = 0;
+      }
+      if (!isset($modules[$module]['count'])) {
+        $modules[$module]['count'] = 0;
+      }
+      $modules[$module]['time'] += $log_time;
+      $modules[$module]['count']++;
+    }
+  }
+
+  $total_time = round($time, 3);
+  $db_info['time'] = $total_time;
+  $db_info['count'] = $count;
+  $db_info['avg'] = !empty($count)
+    ? round($time * 1000 / $count, 3)
+    : 0;
+
+  if (!empty($count)) {
+    $db_info['read_time'] = round($read_time, 3);
+    $db_info['read_count'] = round($read_count, 1);
+    $db_info['read_avg'] = !empty($read_count)
+      ? round($read_time * 1000 / $read_count, 3)
+      : 0;
+
+    $db_info['write_time'] = $db_info['time'] - $db_info['read_time'];
+    $db_info['write_count'] = $count - $read_count;
+    $db_info['write_avg'] = !empty($db_info['write_count'])
+      ? round($db_info['write_time'] * 1000 / $db_info['write_count'], 3)
+      : 0;
+
+    $db_info['write_p'] = round(($db_info['write_time'] / $time) * 100, 1);
+    $db_info['write_p_c'] = round(($db_info['write_count'] / $count) * 100, 2);
+  }
+
+  usort($logs, function ($a, $b) {
+    $a_weight = (is_array($a) && isset($a['time'])) ? $a['time'] : 0;
+    $b_weight = (is_array($b) && isset($b['time'])) ? $b['time'] : 0;
+
+    return $a_weight <=> $b_weight;
+  });
+
+  $logs = array_reverse($logs);
+  for ($i = 0; $i < 20; $i++) {
+    if (isset($logs[$i])) {
+      $db_details['queries'][] = [
+        'time' => round($logs[$i]['time'], 3),
+        'query' => $logs[$i]['query'],
+        'args' => $logs[$i]['args'],
+      ];
+    }
+  }
+
+  unset($logs);
+
+  // Sort modules by total time of queries.
+  uasort($modules, function ($a, $b) {
+    $a_weight = (is_array($a) && isset($a['time'])) ? $a['time'] : 0;
+    $b_weight = (is_array($b) && isset($b['time'])) ? $b['time'] : 0;
+
+    return $a_weight <=> $b_weight;
+  });
+
+  $modules = array_reverse($modules);
+  $i = 0;
+  foreach ($modules as $module => $info) {
+    $db_details['modules'][$module] = [
+      'time' => round($info['time'], 3),
+      'count' => $info['count'],
+    ];
+    $i++;
+    if ($i == 9) {
+      break;
+    }
+  }
+
+  // Sort modules by count of queries.
+  uasort($modules, function ($a, $b) {
+    $a_weight = (is_array($a) && isset($a['count'])) ? $a['count'] : 0;
+    $b_weight = (is_array($b) && isset($b['count'])) ? $b['count'] : 0;
+
+    return $a_weight <=> $b_weight;
+  });
+
+  $modules = array_reverse($modules);
+  $i = 0;
+  foreach ($modules as $module => $info) {
+    $db_details['modules_count'][$module] = [
+      'time' => round($info['time'], 3),
+      'count' => $info['count'],
+    ];
+    $i++;
+    if ($i == 9) {
+      break;
+    }
+  }
+
+  unset($modules);
+
+  return [
+    'info' => $db_info ?? [],
+    'details' => $db_details ?? [],
+  ];
+}
+
+/**
+ * Implements hook_toolbar().
+ *
+ * Print profiler results into toolbar element.
+ */
+function performance_profiler_toolbar(): array {
+  $site_config = \Drupal::config('performance_profiler.settings');
+  if (!$site_config->get('toolbar')
+    || !\Drupal::currentUser()->hasPermission('access performance profiler')) {
+    return [];
+  }
+
+  $path = \Drupal::service('path.current')->getPath();
+  return [
+    'performance_profiler' => [
+      '#type' => 'toolbar_item',
+      'tab' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => [
+          'class' => [
+            'performance-profiler',
+            'toolbar-item',
+            'toolbar-icon',
+            'toolbar-icon-system-admin-config',
+          ],
+          'rel' => $path,
+        ],
+        '#value' => t('Updating...'),
+      ],
+      '#weight' => 200,
+      '#attached' => [
+        'library' => [
+          'performance_profiler/performance_profiler_toolbar',
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function performance_profiler_page_attachments(array &$attachments) {
+  $site_config = \Drupal::config('performance_profiler.settings');
+  if (!$site_config->get('popup')
+    || !\Drupal::currentUser()->hasPermission('access performance profiler')) {
+    return [];
+  }
+
+  $path = \Drupal::service('path.current')->getPath();
+  $attachments['#attached']['library'][] = 'performance_profiler/performance_profiler_dynamic';
+  $attachments['#attached']['drupalSettings']['performanceProfiler']['path'] = $path;
+}

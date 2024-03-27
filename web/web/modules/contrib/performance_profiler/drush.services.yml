@@ -1,0 +1,9 @@
+services:
+  performance_profiler.commands:
+    class: Drupal\performance_profiler\Commands\PerformanceProfilerCommands
+    tags:
+      - { name: drush.command }
+    arguments:
+      - '@messenger'
+      - '@performance_profiler.benchmark'
+      - '@performance_profiler.database_actions'

@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Contains cirp_profiles.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\cirp_profiles\Controller\ProfileAPIController;
+
+
+/**
+ * Implements hook_help().
+ */
+function cirp_profiles_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the cirp_profiles module.
+    case 'help.page.cirp_profiles':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Merge profiles from Profile API to Drupal') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+function cirp_profiles_cron() {
+  // Numeric representation of the week. 0 - sun, 6 -sat.
+  $day = date('w');
+  $current_day= date('Ymd');
+  $last_run = \Drupal::state()->get('profiles.last_run', 0);
+  // Run if today is Sunday.
+  if ($day == 0 && $last_run != $current_day) {
+    $api = new ProfileAPIController();
+    $profile_data = $api->fetchProfileapi();
+    $profile_ids = $profile_data['person_ids'];
+    $profiles = $profile_data['profiles'];
+    print_r($profiles);
+    exit;
+    $data = $api->getMatchedprofiles($profile_ids);
+    $matched = [];
+    $tobe_updated = NULL;
+    if ($data != NULL) {
+      $seperated_data = $api->seperateData($data);
+      $matched = $seperated_data['matched'];
+      $tobe_updated = $seperated_data['updated'];
+    }
+    $tobe_inserted = array_diff($profile_ids, $matched); 
+    $api->createProfiles($profiles, $tobe_inserted);
+    if ($tobe_updated != NULL) {
+      \Drupal::logger('profiles')->notice('Profiles have been updated from the Profile API');
+      $api->updateProfiles($profiles, $tobe_updated);
+    }
+     \Drupal::state()->set('profiles.last_run', $current_day);
+  }
+
+}
+
+/**
+ * Implements hook_pathauto_pattern_alter().
+ * To Generate the two Different paths for Alumni Content based on the REU member or training testimonial.
+ * This hook will override the default pattern that is set for Alumni.
+ * This hook will only be called if a default pattern is configured (on
+ * admin/config/search/path/patterns).
+ */
+ 
+function cirp_profiles_pathauto_pattern_alter(\Drupal\pathauto\PathautoPatternInterface $pattern, array $context) {
+  
+  //$context['op']- check the node operation
+  if ($context['module'] == 'node' && ($context['op'] == 'insert' || $context['op'] == 'update')) {
+	  $node = $context['data']['node'];
+	  $type = $node->getType();
+    
+	//check node content type
+	if($type=='alumni') {
+	  $variables['alumni_reu_member'] = $node->get('field_reu_alumni_member_')->getValue();
+    if (!empty($variables['alumni_reu_member']) && $variables['alumni_reu_member'][0]['value']== 'Yes') {
+			//if the Alumni is 'REU Member'  
+      $pattern->setPattern('training-opportunities/cirp-reu-alumni-stories/[node:title]');
+    }
+    else {
+		  //if the Alumni is 'Training Testimonial'  
+			$pattern->setPattern('training-opportunities/cirp-alumni-stories/[node:title]');
+		  }	
+	  }	
+  }
+}
+

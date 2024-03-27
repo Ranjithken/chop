@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * PHP benchmark result table.
+ */
+#}
+<h4>{{ 'PHP Benchmark:'|t }}</h4>
+<p class="performance-profiler-creator-credits">Credits to the creator: <strong>Alessandro Torrisi</strong> (Code24 BV, The Netherlands), visit http://www.php-benchmark-script.com</p>
+<table>
+  <thead>
+    <tr>
+      <th>{{ 'Total'|t }}</th>
+      <th>{{ 'Math'|t }}</th>
+      <th>{{ 'String'|t }}</th>
+      <th>{{ 'Loop'|t }}</th>
+      <th>{{ 'IfElse'|t }}</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><strong>{{ value.total }}</strong>s</td>
+    <td>{{ value.testMath }}s</td>
+    <td>{{ value.testStringManipulation }}s</td>
+    <td>{{ value.testLoops }}s</td>
+    <td>{{ value.testIfElse }}s</td>
+  </tr>
+  </tbody>
+</table>

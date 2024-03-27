@@ -1,0 +1,160 @@
+{#
+/**
+ * @file
+ * Theme override for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ */
+#}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+  ]
+%}
+<div class="inner-banner row inner-profilebanner blog-homepage">
+    <div class="container-fluid">
+      <div class="layout row">
+        <div></div>
+       </div>
+    </div>
+  </div>
+ <div class="container">
+    <div class="layout row">
+      <div class="col-12 col-lg-8 bs-region bs-region--left bloglist-view">
+        <div class="custom-viewTitle">
+          <h2 class="text-uppercase">Research In Action</h2>
+        </div>
+			<div class="pt-15">
+            {% if tag %}
+
+            <div data-block-plugin-id="system_breadcrumb_block" id="block--Breadcrumbs">
+				<nav aria-label="breadcrumb" class="container">
+					<h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/">Home</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/about-cvp">About CVP</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/new-at-cvp">What's New</a>
+						</li>
+                        <li class="breadcrumb-item">
+							<a href="/blog">Research In Action Blog</a>
+						</li>
+                        <li class="breadcrumb-item text-capitalize">
+							{{ tag }}
+						</li>
+
+					</ol>
+				</nav>
+			</div>
+			{% else %}
+			<div data-block-plugin-id="system_breadcrumb_block" id="block--Breadcrumbs">
+				<nav aria-label="breadcrumb" class="container">
+					<h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/">Home</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/about-cvp">About CVP</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="/new-at-cvp">What's New</a>
+						</li>
+                        <li class="breadcrumb-item">
+							<a href="/blog">Research In Action Blog</a>
+						</li>
+
+					</ol>
+				</nav>
+			</div>
+			{% endif %}
+			</div>
+          <div{{ attributes.addClass(classes) }}>
+              {{ title_prefix }}
+              {{ title }}
+              {{ title_suffix }}
+
+              {% if header %}
+                <header  class="mb-0 pb-40">
+                  {{ header }}
+                </header>
+              {% endif %}
+              <div class="bg-lighten clearfix col-12 mb-40 p-0">
+                   {{ drupal_view('featured_blog_post','block_1') }}
+                </div>
+
+              {% if footer %}
+                <footer class="col-12 clearfix border-top pt-20">
+                    {{ footer }}
+                </footer>
+             {% endif %}
+
+              {% if rows -%}
+			  <div class="research-in-action">
+                {{ rows }}
+				</div>
+              {% elseif empty -%}
+                {{ empty }}
+              {% endif %}
+
+              {% if footer %}
+                <footer class="col-12 clearfix">
+                  {{ footer }}
+                </footer>
+
+              {{ pager }}
+
+
+
+              {% endif %}
+
+              {{ feed_icons }}
+            </div>
+
+      </div>
+       <div class="d-lg-block col-12 col-lg-4 bs-region bs-region--right sidebar">
+	   <div class="block block-menu navigation menu--about-menu">
+                {{ drupal_menu('about-menu') }}
+              </div>
+              <div>
+                {{ exposed }}
+              </div>
+
+              <div class="years-list">
+              <h3> Filter by Year</h3>
+              {{ drupal_view('blog_archive','block_1') }}
+              </div>
+
+                 {#  {{ drupal_entity('block_content', '25') }} #}
+
+      </div>
+    </div>
+  </div>

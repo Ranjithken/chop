@@ -1,0 +1,8 @@
+name: 'Multi Site Search'
+type: module
+description: 'Multi site search for CIRP sites'
+core_version_requirement: ^9 || ^10
+package: 'Custom'
+dependencies:
+  - search_api
+  - search_api_solr

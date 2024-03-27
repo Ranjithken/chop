@@ -1,0 +1,13 @@
+type: module
+name: 'Performance Profiler'
+description: 'Module to log page build time and peak memory usage.'
+package: Development
+core_version_requirement: ^9.3 || ^10
+configure: performance_profiler.settings
+tags:
+ - developer
+
+# Information added by Drupal.org packaging script on 2023-05-31
+version: '1.0.0'
+project: 'performance_profiler'
+datestamp: 1685537939

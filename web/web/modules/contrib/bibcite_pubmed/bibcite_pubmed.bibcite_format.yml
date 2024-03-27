@@ -1,0 +1,90 @@
+pubmed:
+  id: pubmed
+  label: PubMed XML
+  extension: xml
+  encoder: \Drupal\bibcite_pubmed\Encoder\PubmedEncoder
+  types:
+    - Autobiography
+    - Bibliography
+    - Biography
+    - Case Reports
+    - Classical Article
+    - Clinical Conference
+    - Clinical Study
+    - Clinical Trial
+    - Clinical Trial, Phase I
+    - Clinical Trial, Phase II
+    - Clinical Trial, Phase III
+    - Clinical Trial, Phase IV
+    - Collected Works
+    - Comparative Study
+    - Congresses
+    - Consensus Development Conference
+    - Consensus Development Conference, NIH
+    - Controlled Clinical Trial
+    - Dataset
+    - Dictionary
+    - Directory
+    - Duplicate Publication
+    - Editorial
+    - Festschrift
+    - Government Publications
+    - Guideline
+    - Historical Article
+    - Interactive Tutorial
+    - Interview
+    - Introductory Journal Article
+    - Journal Article
+    - Lectures
+    - Legal Cases
+    - Legislation
+    - Letter
+    - Meta-Analysis
+    - Multicenter Study
+    - News
+    - Newspaper Article
+    - Observational Study
+    - Overall
+    - Patient Education Handout
+    - Periodical Index
+    - Personal Narratives
+    - Portraits
+    - Practice Guideline
+    - Pragmatic Clinical Trial
+    - Publication Components
+    - Publication Formats
+    - Publication Type Category
+    - Randomized Controlled Trial
+    - Research Support, American Recovery and Reinvestment Act
+    - Review
+    - Scientific Integrity Review
+    - Study Characteristics
+    - Support of Research
+    - Technical Report
+    - Twin Study
+    - Validation Studies
+    - Video-Audio Media
+    - Webcasts
+  fields:
+    - ArticleTitle
+    - PublicationType
+    - AuthorList
+    - KeywordList
+    - Abstract
+    - Year
+    - JournalTitle
+    - Volume
+    - Issue
+    - Pagination
+    - PubDate
+    - Language
+    - ISSN
+    - url
+    - doi
+    - ISOAbbreviation
+    - PMID
+pubmed_id:
+  id: pubmed_id
+  label: PubMedId
+  extension: txt
+  encoder: \Drupal\bibcite_pubmed\Encoder\PubmedIdEncoder

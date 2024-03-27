@@ -1,0 +1,14 @@
+global-css:
+  css:
+    theme:
+      css/bootstrap.css: {}
+      css/font-awesome.min.css: {}
+      css/style.css: {}
+      css/print.css: { media: print }
+global-js:
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js: {}
+    https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js: {}
+    js/main.js: {}
+  dependencies:
+    - core/jquery

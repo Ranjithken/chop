@@ -1,0 +1,32 @@
+geolocation.shared:
+  version: 8.x-3.x
+  js:
+    js/geolocation-shared.js: {}
+
+geolocation.widget.map:
+  version: 8.x-3.x
+  js:
+    js/geolocation-widget-map.js: {}
+
+geolocation.map:
+  version: 8.x-3.x
+  css:
+    theme:
+      css/geolocation-map.css: {}
+  js:
+    js/geolocation-map.js: {}
+  dependencies:
+    - geolocation/geolocation.shared
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+
+geolocation.location.input:
+  version: 8.x-3.x
+  js:
+    js/geolocation-location-input.js: { }
+  dependencies:
+    - geolocation/geolocation.shared
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax

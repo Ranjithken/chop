@@ -1,0 +1,6 @@
+{% if details %}
+  {{ details }}
+{% else %}
+<p>CAPTCHA<br/> This question is for testing whether you are a human visitor and to prevent automated spam submissions.</p>
+    <div {{attributes.addClass('captcha')}}>{{ element }}</div>
+{% endif %}

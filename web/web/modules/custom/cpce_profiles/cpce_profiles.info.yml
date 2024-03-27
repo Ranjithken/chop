@@ -1,0 +1,5 @@
+name: 'CPCE Profiles'
+type: module
+description: 'Merge profiles from Profile API to Drupal'
+core_version_requirement: ^8 || ^9 || ^10
+package: 'Custom'

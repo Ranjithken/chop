@@ -1,0 +1,30 @@
+performance_profiler:
+  version: VERSION
+  js:
+    js/performance_profiler.js: {}
+  css:
+    theme:
+      css/performance_profiler.css: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+
+performance_profiler_toolbar:
+  version: VERSION
+  js:
+    js/performance_profiler_toolbar.js: {}
+  css:
+    theme:
+      css/performance_profiler_toolbar.css: {}
+  dependencies:
+    - performance_profiler/performance_profiler
+
+performance_profiler_dynamic:
+  version: VERSION
+  js:
+    js/performance_profiler_dynamic.js: {}
+  css:
+    theme:
+      css/performance_profiler_dynamic.css: {}
+  dependencies:
+    - performance_profiler/performance_profiler

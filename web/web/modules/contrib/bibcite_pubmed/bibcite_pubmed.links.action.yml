@@ -1,0 +1,5 @@
+bibcite_pubmed.reference.lookup_form:
+  route_name: bibcite_pubmed.lookup
+  title: 'PubMed lookup'
+  appears_on:
+    - entity.bibcite_reference.collection

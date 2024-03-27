@@ -1,0 +1,13 @@
+core_version_requirement: ^10 || ^11
+name: Geolocation - Google Maps API
+type: module
+description: 'Google Maps integration.'
+package: Geolocation
+configure: geolocation_google_maps.settings
+dependencies:
+  - geolocation:geolocation
+
+# Information added by Drupal.org packaging script on 2024-02-10
+version: '4.0.0-alpha5'
+project: 'geolocation'
+datestamp: 1707541912

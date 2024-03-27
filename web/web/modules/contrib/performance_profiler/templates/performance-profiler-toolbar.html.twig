@@ -1,0 +1,115 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the performance toolbar.
+ */
+#}
+<div class="performance-profiler-short">
+  <p>{{ short_message }}</p>
+  <div class="arrow"></div>
+</div>
+{% if data %}
+  <div class="performance-profiler-long hidden">
+    {% set i = 1 %}
+    {% for key, value in data %}
+      <div>
+        {{ '#' ~ i }}<br>
+        {% set i = i + 1 %}
+        <b>{{ value.long.run_time }}</b>{{ 's'|t }}
+        <b>{{ value.long.memory_peak }}</b>{{ 'Mb'|t }} - <b>{{ value.long.path }}</b>
+        {% if value.long.memcache_time %}(MC: <b>{{ value.long.memcache_time }}</b>{{ 's'|t }}) {% endif %}
+        {% if value.long.alias != value.long.path %} ({{ value.long.alias }}){% endif %}
+        {% if value.db %}
+          <div class="db-details-wrapper">
+            <h4>{{ 'Database queries:'|t }}</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>{{ 'Type'|t }}</th>
+                  <th>{{ 'Time'|t }}<br>{{ 's'|t }}</th>
+                  <th>{{ 'Count'|t }}</th>
+                  <th>{{ 'Avg. time'|t }}<br>{{ 'ms'|t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ 'Total'|t }}</td>
+                  <td>{{ value.db.time }}</td>
+                  <td>{{ value.db.count }}</td>
+                  <td>{{ value.db.avg }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'Read'|t }}</td>
+                  <td>{{ value.db.read_time }}</td>
+                  <td>{{ value.db.read_count }}</td>
+                  <td>{{ value.db.read_avg }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'Write'|t }}</td>
+                  <td>{{ value.db.write_time }}</td>
+                  <td>{{ value.db.write_count }}</td>
+                  <td>{{ value.db.write_avg }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'Write in %'|t }}</td>
+                  <td>{{ value.db.write_p }}%</td>
+                  <td>{{ value.db.write_p_c }}%</td>
+                  <td> - </td>
+                </tr>
+              </tbody>
+            </table>
+            {% if value.db_details %}
+              <div class="actions">
+                <a class="show-details" href="#">{{ 'Show top queries'|t }}</a>
+              </div>
+              <div class="hidden db-details">
+                <div class="db-details-inner">
+                  <div class="actions">
+                    <a class="hide-details" href="#">{{ 'Hide details [x]'|t }}</a>
+                  </div>
+                  <details open>
+                    <summary>{{ 'Top 20 modules by queries execution time'|t }}</summary>
+                    <div class="details-wrapper">
+                      <ul>
+                        {% for module, query in value.db_details.modules %}
+                          <li><b>{{ module }}</b> - {{ query.time }}{{ 's'|t }} ({{ query.count }})</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </details>
+                  <details open>
+                    <summary>{{ 'Top 20 modules by queries amount'|t }}</summary>
+                    <div class="details-wrapper">
+                      <ul>
+                        {% for module, query in value.db_details.modules_count %}
+                          <li><b>{{ module }}</b> - {{ query.count }} ({{ query.time }}{{ 's'|t }})</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </details>
+                  <details>
+                    <summary>{{ 'Top 20 queries by execution time'|t }}</summary>
+                    <div class="details-wrapper">
+                      {% for query in value.db_details.queries %}
+                        <div class="query-item">
+                          <b>{{ query.time }}{{ 's'|t }}</b>
+                          <p>{{ query.query }}</p>
+                          <ul>
+                            {% for arg_key, arg_value in query.args %}
+                              <li>{{ arg_key }}: {{ arg_value }}</li>
+                            {% endfor %}
+                          </ul>
+                          <br>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </details>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

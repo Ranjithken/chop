@@ -1,0 +1,95 @@
+.performance-profiler-long,
+.performance-profiler-long a {
+  color: #222330;
+}
+
+.performance-profiler-short p {
+  font-weight: bold;
+  margin: 0;
+}
+
+.db-details-shown {
+  padding: 10px;
+  background-color: #e3e3e3;
+}
+.db-details-wrapper {
+  margin-bottom: 10px;
+}
+
+.db-details-wrapper h4 {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+.db-details-wrapper .actions,
+.db-details .actions {
+  text-align: right;
+}
+.db-details-wrapper .actions a,
+.db-details .actions a {
+  text-decoration: underline;
+}
+.db-details-wrapper .actions a:hover,
+.db-details .actions a:hover {
+  text-decoration: none;
+}
+.db-details-wrapper table {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, .08);
+  margin: 0;
+}
+.db-details-wrapper table th {
+  border: 1px solid rgba(0, 0, 0, .08);
+  font-weight: normal;
+  background-color: rgba(0, 0, 0, .08);
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+.db-details-wrapper table td {
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, .08);
+  padding: 0.5rem 1rem;
+}
+.db-details-wrapper table td:first-child {
+  text-align: left;
+}
+.db-details details summary {
+  font-weight: bold;
+}
+.db-details details summary:hover {
+  text-decoration: underline;
+}
+.db-details details .details-wrapper {
+  margin-left: 30px;
+}
+
+.performance-profiler-short p {
+  display: inline-block;
+}
+.performance-profiler-short div.arrow {
+  float: right;
+  width: 29px;
+  height: 20px;
+  border-radius: 10px;
+  background: grey;
+  cursor: pointer;
+  margin: 0 0 0 5px;
+}
+
+.performance-profiler-short div.arrow::before {
+  position: absolute;
+  content: '';
+  right: 17px;
+  top: 16px;
+  border: .5em solid transparent;
+  border-top-color: black;
+}
+
+.performance-profiler-short.open div.arrow::before {
+  top: 9px;
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.performance-profiler-creator-credits {
+  font-size: small;
+}

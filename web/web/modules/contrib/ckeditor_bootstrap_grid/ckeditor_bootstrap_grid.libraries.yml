@@ -1,0 +1,13 @@
+ckeditor_bootstrap_grid:
+  js:
+    js/build/simpleGrid.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
+# Loaded in the text format configuration form to provide styling for the icon
+# used in toolbar config.
+admin.ckeditor_bootstrap_grid:
+  css:
+    theme:
+      css/style.css: { }
+

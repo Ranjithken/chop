@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * DB benchmark result table.
+ */
+#}
+<h4>{{ 'Database actions benchmark results:'|t }}</h4>
+<table>
+  <thead>
+    <tr>
+      <th>{{ 'Action'|t }}</th>
+      <th>{{ 'Time'|t }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for action, results in value %}
+      <tr>
+        <td colspan="2"><strong>{{ action }}</strong></td>
+      </tr>
+      {% for query, time in results %}
+        <tr>
+          <td>{{ query }}</td>
+          <td>{{ time }}s</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>

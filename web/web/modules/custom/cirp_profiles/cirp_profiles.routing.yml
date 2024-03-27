@@ -1,0 +1,6 @@
+cirp_profiles.import_form:
+  path: '/admin/import-profiles'
+  defaults:
+    _form: '\Drupal\cirp_profiles\Form\ImportUserFieldsForm'
+  requirements:
+    _permission: 'access import_form'

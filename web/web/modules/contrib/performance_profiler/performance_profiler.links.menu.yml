@@ -1,0 +1,6 @@
+performance_profiler.settings:
+  title: 'Performance profiler'
+  parent: system.admin_config_development
+  description: 'Performance profiler module configuration.'
+  route_name: performance_profiler.settings
+  weight: 0

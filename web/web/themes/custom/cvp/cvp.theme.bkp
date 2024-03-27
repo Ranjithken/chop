@@ -1,0 +1,128 @@
+<?php
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Cache\Cache;
+
+/**
+ * @file
+ * Functions to support theming in the prepit theme.
+ */
+
+
+/**
+* Implements hook_preprocess_menu() for menu--about--menu.html.twig.
+*/
+function cvp_preprocess_menu(&$variables, $hook) {
+
+  if ($hook == 'menu__about_menu') {
+    $current_path = \Drupal::request()->getRequestUri();
+    $items = $variables['items'];
+    foreach ($items as $key => $item) {
+      // Set active to dom element if path of menu item matches current path
+      if (!$item['in_active_trail']) {
+        $variables['items'][$key]['attributes']->addClass('hidden');
+
+      }
+    }
+  }
+}
+
+ /**
+* Implements hook_preprocess_block()
+* To add the Banner title dynamically based on Parent item.
+*/
+function cvp_preprocess_block(&$variables) {
+  if ($nodes = \Drupal::request()->attributes->get('node')) {
+	 if (gettype($nodes) != 'string') {  
+    $image_feild_name = "";
+    $nid = $nodes->id();
+    $typeName = $nodes->bundle();
+    $currentnode = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+    /** check alumni page for REU alumni member */
+    if($typeName == 'alumni') {
+      $variables['alumni_reu_member'] = $currentnode->field_reu_alumni_member_->value;
+      $image_feild_name = 'field_inner_banner';
+    }else if($typeName == 'blog_post') {
+      $image_feild_name = 'field_image';
+    }else{
+      $image_feild_name = 'field_inner_banner';
+    }
+    $variables['#cache']['max-age'] = 0;
+    /** check node has Inner Banner Field OR Image Field */
+    if($currentnode->field_inner_banner || $currentnode->field_image) {
+    if(!empty($currentnode->$image_feild_name->target_id)){
+      $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($currentnode->$image_feild_name->entity->getFileUri()));
+    }else{
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    $links = $menu_link_manager->loadLinksByRoute('entity.node.canonical', array('node' => $nid));
+    /** Check Node Has Menus links */
+    if($links) {
+      foreach($links as $link) {
+      $menu_name = $link->getMenuName();
+      if($menu_name == 'main-navigation') {
+        /** Check Parent Menu  */
+         if($link->getParent()) {
+           $parents = $menu_link_manager->getParentIds($link->getParent());
+           $parents = array_reverse($parents);
+           $parent = reset($parents);
+           $parent = $menu_link_manager->createInstance($parent);
+           $path = $parent->getUrlObject()->toString();
+           $url = trim(str_replace("/cirp/docroot"," ",$path));
+           $path = \Drupal::service('path.alias_manager')->getPathByAlias($url);
+           if(preg_match('/node\/(\d+)/', $path, $matches)) {
+             $parentnode = \Drupal\node\Entity\Node::load($matches[1]);
+           }
+           if(!empty($parentnode->$image_feild_name->target_id)){
+             $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($parentnode->$image_feild_name->entity->getFileUri()));
+          }else{
+            $field_info = FieldConfig::loadByName('node', $typeName, $image_feild_name);
+            $image_uuid = $field_info->getSetting('default_image')['uuid'];
+            $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+            if(!empty($image)){
+            $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($image->getFileUri()));
+            }
+        }
+      }else{
+          $field_info = FieldConfig::loadByName('node', $typeName, $image_feild_name);
+          $image_uuid = $field_info->getSetting('default_image')['uuid'];
+          $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+          if(!empty($image)){
+          $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($image->getFileUri()));
+          }
+        }
+      }
+    }
+    }else{
+       $field_info = FieldConfig::loadByName('node', $typeName, $image_feild_name);
+       $image_uuid = $field_info->getSetting('default_image')['uuid'];
+       $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+       if(!empty($image)){
+       $variables['inner_banner_image'] = file_url_transform_relative(file_create_url($image->getFileUri()));
+     }
+    }
+   }
+  }
+  }
+}
+}
+
+/**
+   * Implements hook_preprocess_html().
+   */
+  function cvp_preprocess_html(&$variables) {
+    // Fetches the current URL path.
+    $current_path = \Drupal::service('path.current')->getPath();
+    switch ($current_path) {
+      case "/new-at-cvp":
+        $variables['attributes']['class'][] = 'path-what-s-new-at-cvp';
+        break;
+		
+      case "/peer-reviewed-publications":
+        $variables['attributes']['class'][] = 'path-publications-view';
+        break;
+
+      default:
+        break;
+    }
+  }

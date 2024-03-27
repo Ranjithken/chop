@@ -1,0 +1,29 @@
+services:
+  bibcite_pubmed.encoder.pubmed:
+    class: Drupal\bibcite_pubmed\Encoder\PubmedEncoder
+    tags:
+      - { name: encoder, format: pubmed }
+  bibcite_pubmed.encoder.pubmed_id:
+    class: Drupal\bibcite_pubmed\Encoder\PubmedIdEncoder
+    tags:
+      - { name: encoder, format: pubmed_id }
+    arguments: ['@bibcite_pubmed.client']
+  bibcite_pubmed.normalizer.reference:
+    class: Drupal\bibcite_pubmed\Normalizer\PubmedReferenceNormalizer
+    tags:
+      - { name: normalizer, priority: 5 }
+    arguments: ['@entity_type.manager', '@config.factory', '@entity_type.repository', '@entity_field.manager']
+    calls:
+      - [setFormat, [['pubmed', 'pubmed_id']]]
+    properties:
+      typeKey: 'PublicationType'
+      defaultType: 'Journal Article'
+      contributorKey: 'AuthorList'
+      keywordKey: 'KeywordList'
+  bibcite_pubmed.pubmed_subscriber:
+    class: Drupal\bibcite_pubmed\EventSubscriber\PubmedSubscriber
+    tags:
+      - { name: event_subscriber }
+  bibcite_pubmed.client:
+    class: Drupal\bibcite_pubmed\PubmedClient
+    arguments: ['@http_client']

@@ -1,0 +1,13 @@
+name: 'Bibliography & Citation - PubMed'
+type: module
+description: 'Provides PubMed import and lookup functionality.'
+core_version_requirement: ^9 || ^10
+package: 'Bibliography & Citation - Formats'
+dependencies:
+  - bibcite:bibcite
+  - bibcite:bibcite_entity
+
+# Information added by Drupal.org packaging script on 2021-12-09
+version: '2.0.0-alpha1'
+project: 'bibcite_pubmed'
+datestamp: 1639035622

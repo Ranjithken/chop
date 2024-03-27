@@ -1,0 +1,7 @@
+name: CKEditor Bootstrap Grid
+type: module
+description: "Adds Bootstrap Grid to CKEditor"
+package: CKEditor 5
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:ckeditor5

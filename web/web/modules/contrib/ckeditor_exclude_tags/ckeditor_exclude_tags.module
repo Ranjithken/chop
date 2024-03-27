@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Alters & attachments to ckeditor.
+ */
+
+/**
+ * {@inheritdoc}
+ */
+function ckeditor_exclude_tags_editor_js_settings_alter(array &$settings) {
+
+  $config = \Drupal::config('ckeditor_exclude_tags.settings');
+  $data = $config->getRawData();
+  foreach ($settings['editor']['formats'] as $name => $value) {
+    if (isset($data[$name]) && !empty(trim($data[$name]))) {
+      $settings['editor']['formats'][$name]['editorSettings']['disallowedContent'] = trim($data[$name]);
+      $settings['editor']['formats'][$name]['editorSettings']['allowedContent'] = [
+        '' => [
+          "attributes" => TRUE,
+          "styles" => TRUE,
+          "classes" => TRUE,
+        ],
+      ];
+    }
+  }
+
+}
+
+/**
+ * {@inheritdoc}
+ */
+function ckeditor_exclude_tags_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'ckeditor_exclude_tags/ckeditor_exclude_tags';
+}

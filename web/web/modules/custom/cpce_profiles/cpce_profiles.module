@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Contains cpce_profiles.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\cpce_profiles\Controller\ProfileAPIController;
+
+
+/**
+ * Implements hook_help().
+ */
+function cpce_profiles_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the cirp_profiles module.
+    case 'help.page.cpce_profiles':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Merge profiles from Profile API to Drupal') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+function cpce_profiles_cron() {
+  // Numeric representation of the week. 0 - sun, 6 -sat.
+  $day = date('w');
+  $current_day= date('Ymd');
+  $last_run = \Drupal::state()->get('profiles.last_run', 0);
+  // Run if today is Sunday.
+  if ($day == 0 && $last_run != $current_day) {
+    $api = new ProfileAPIController();
+    $profile_data = $api->fetchProfileapi();
+    $profile_ids = $profile_data['person_ids'];
+    $profiles = $profile_data['profiles'];
+    $data = $api->getMatchedprofiles($profile_ids);
+    $matched = [];
+    $tobe_updated = NULL;
+    if ($data != NULL) {
+      $seperated_data = $api->seperateData($data);
+      $matched = $seperated_data['matched'];
+      $tobe_updated = $seperated_data['updated'];
+    }
+    $tobe_inserted = array_diff($profile_ids, $matched); 
+    $api->createProfiles($profiles, $tobe_inserted);
+    if ($tobe_updated != NULL) {
+      \Drupal::logger('profiles')->notice('Profiles have been updated from the Profile API');
+      $api->updateProfiles($profiles, $tobe_updated);
+    }
+     \Drupal::state()->set('profiles.last_run', $current_day);
+  }
+
+}
+
+
+/**
+ * Implements template_preprocess_views_view().
+ */
+function cpce_profiles_preprocess_views_view(&$variables) {
+
+  // Retrieve an array which contains the path pieces.
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path == '/solr-search' || $current_path == '/site-search') {
+
+	  $variables['url_param'] = 'solr-search';
+	  $variables['checked'] = 'checked';
+    if ($current_path == '/solr-search') {
+      $variables['url_param'] = 'site-search';
+      $variables['checked'] = NULL;
+    }
+    $variables['custom_term'] = isset($_GET['keys']) ? $_GET['keys'] : NULL;
+  }
+}

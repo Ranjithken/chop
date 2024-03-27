@@ -1,0 +1,6 @@
+cpce_events.import_form:
+  path: '/admin/import-events'
+  defaults:
+    _form: '\Drupal\cpce_events\Form\ImportUserFieldsForm'
+  requirements:
+    _permission: 'access import_form'

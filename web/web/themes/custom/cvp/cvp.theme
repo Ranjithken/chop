@@ -1,0 +1,277 @@
+<?php
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Cache\Cache;
+
+/**
+ * @file
+ * Functions to support theming in the prepit theme.
+ */
+
+
+/**
+* Implements hook_preprocess_menu() for menu--about--menu.html.twig.
+*/
+
+
+function cvp_preprocess_menu(&$variables, $hook) {
+
+  if ($hook == 'menu__about_menu') {
+    //dvr($variables);
+    //kint($variables['items']);
+    $current_path = \Drupal::request()->getRequestUri();
+    $url_fragments = explode('/', $current_path);
+   // print_r($url_fragments);
+    $current = '/' .$url_fragments[1];
+    $variables['#cache']['max-age'] = 0;
+    $items = $variables['items'];
+   // dvr($items);//exit;
+    //print_r($current);
+    //looping menu parents i.e; about, research, etc
+    
+    foreach ($items as $key => $item) {
+      if ($item['in_active_trail']) {
+      }
+      //checking if about has childs
+      elseif($variables['items'][$key]['below']){
+        $colums = $urls = $active_items = array();
+       // dvr($variables);
+      //  dvr($variables['items']);
+        //if about has childs looping them i.e; meetourteam,whatsnew, etc
+        $i = 0;
+        foreach($variables['items'][$key]['below'] as $subkey => $subs){
+          //adding url of sub menu item to a variable
+          $colums[$key][] = $subs['url'];
+          
+  //  dvr($variables['items'][$key]['below']);//exit;
+         // print_r($colums[$key]);
+// print_r($colums);
+          $active_items[$key][] = $subkey.'@'.$i;
+          //checking if child has sub-childs
+          if($subs['below']){
+            //if child has sub-childs i.e; meetourteam,whatsnew, etc. adding those urls to variable
+            $sub_count = count(array_column($subs['below'], 'url'));
+            $submenu_links = _menu_process_submenu($subs['below'], $i, $subkey);
+            $active_items[$key] = array_merge($active_items[$key],$submenu_links);
+            $subs_url = array_column($subs['below'], 'url');
+            $colums[$key] = array_merge($colums[$key],$subs_url);
+          //  print_r($colums[$key]);
+          // print_r($subs_url);
+         // print_r($subs['url']);
+         // \Drupal::logger('my_module')->notice('The value of $current_path is @path', ['@path' => $subs['url']]);
+          }
+          $i++;
+        }
+        //if child has sub-childs i.e; meetourteam,whatsnew, etc. adding those urls to variable
+        if(isset($colums[$key]) && count($colums[$key])>1){
+          foreach($colums[$key] as $colum){
+              $urls[$key][] = $colum->toString();
+              
+         // dvr($colum);
+            //   print_r($urls[$key]);
+          }
+
+        }
+
+        if(is_array($urls[$key])){
+
+         // print_r($urls[$key]);
+          
+          $search[$key] = array_search($current,$urls[$key]);
+        //  dvr($current);
+         // print_r($search[$key]);
+          $search[$key] = trim($search[$key]);
+         // print_r($search[$key]);
+// \Drupal::logger('search')->notice('The value of $current_path is @path', ['@path' => $search[$key]]);
+          if(count($url_fragments)>3){
+            $current2 = '/' .$url_fragments[1].'/' .$url_fragments[2];
+           // print_r($current2);
+            $search_key = array_search($current2,$urls[$key]);
+            $search_key = trim($search_key);
+            if ($search_key!= '') {
+              $search[$key] = $search_key;
+            }
+            // print_r($search_key);
+          }
+
+          if(isset($search[$key]) && $search[$key] == ''){
+
+            $search[$key] = _menu_process_searchstring($url_fragments, $urls[$key]);
+            $search[$key] = trim($search[$key]);
+          }
+          
+          if ((count($url_fragments) > 1) && (($search[$key]!= ''))) {
+           // echo "count1";
+            $variables['items'][$key]['attributes']->addClass('active');
+            // $variables['items'][$key]['in_active_trail'] = TRUE;
+            $actual = explode("@",$active_items[$key][$search[$key]]);
+
+            if(count($actual) == 2){
+              
+           // echo "count2";
+              $variables['items'][$key]['in_active_trail'] = TRUE;
+              $variables['items'][$key]['below'][$actual[0]]['in_active_trail'] = TRUE;
+              $variables['items'][$key]['attributes']->setAttribute('is_menu_active', 'test');
+            } 
+            elseif(count($actual) == 4){
+              
+           // echo "count4";
+              $variables['items'][$key]['in_active_trail'] = TRUE;
+              $variables['items'][$key]['below'][$actual[0]]['in_active_trail'] = TRUE;
+              $variables['items'][$key]['below'][$actual[0]]['below'][$actual[2]]['in_active_trail'] = TRUE;
+            }
+          }elseif (!$variables['items'][$key]['in_active_trail']) {
+           // echo "count5";
+            $variables['items'][$key]['attributes']->addClass('hidden');
+          }
+        }   
+      }elseif (!$item['in_active_trail']) {
+            //print_r($colums[$key]);
+        $variables['items'][$key]['attributes']->addClass('hidden');
+      }
+    }
+  }
+}
+ /**
+* Implements hook_preprocess_block()
+* To add the Banner title dynamically based on Parent item.
+*/
+function cvp_preprocess_block(&$variables) {
+  if ($nodes = \Drupal::request()->attributes->get('node')) {
+	 if (gettype($nodes) != 'string') {  
+    $image_feild_name = "";
+    $nid = $nodes->id();
+    $typeName = $nodes->bundle();
+    $currentnode = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+    /** check alumni page for REU alumni member */
+    if($typeName == 'alumni') {
+      $variables['alumni_reu_member'] = $currentnode->field_reu_alumni_member_->value;
+      $image_feild_name = 'field_inner_banner';
+    }else if($typeName == 'blog_post') {
+      $image_feild_name = 'field_image';
+    }else{
+      $image_feild_name = 'field_inner_banner';
+    }
+    $variables['#cache']['max-age'] = 0;
+    /** check node has Inner Banner Field OR Image Field */
+    if($currentnode->field_inner_banner || $currentnode->field_image) {
+    if(!empty($currentnode->$image_feild_name->target_id)){
+      $variables['inner_banner_image'] = Drupal::service('file_url_generator')->generateString($currentnode->$image_feild_name->entity->getFileUri());
+    }else{
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    $links = $menu_link_manager->loadLinksByRoute('entity.node.canonical', array('node' => $nid));
+    /** Check Node Has Menus links */
+    if($links) {
+      foreach($links as $link) {
+      $menu_name = $link->getMenuName();
+      if($menu_name == 'main-navigation') {
+        /** Check Parent Menu  */
+         if($link->getParent()) {
+           $parents = $menu_link_manager->getParentIds($link->getParent());
+           $parents = array_reverse($parents);
+           $parent = reset($parents);
+           $parent = $menu_link_manager->createInstance($parent);
+           $path = $parent->getUrlObject()->toString();
+           $url = trim(str_replace("/cirp/docroot"," ",$path));
+           $path = \Drupal::service('path_alias.manager')->getPathByAlias($url);
+           if(preg_match('/node\/(\d+)/', $path, $matches)) {
+             $parentnode = \Drupal\node\Entity\Node::load($matches[1]);
+           }
+           if(!empty($parentnode->$image_feild_name->target_id)){
+             $variables['inner_banner_image'] = Drupal::service('file_url_generator')->generateString($parentnode->$image_feild_name->entity->getFileUri());
+          }else{
+            $field_info = FieldConfig::loadByName('node', $typeName, $image_feild_name);
+            $image_uuid = $field_info->getSetting('default_image')['uuid'];
+            $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+            if(!empty($image)){
+            $variables['inner_banner_image'] = Drupal::service('file_url_generator')->generateString($image->getFileUri());
+            }
+        }
+      }else{
+          $field_info = FieldConfig::loadByName('node', $typeName, $image_feild_name);
+          $image_uuid = $field_info->getSetting('default_image')['uuid'];
+          $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+          if(!empty($image)){
+          $variables['inner_banner_image'] = Drupal::service('file_url_generator')->generateString($image->getFileUri());
+          }
+        }
+      }
+    }
+    }else{
+       $field_info = FieldConfig::loadByName('node', $typeName, $image_feild_name);
+       $image_uuid = $field_info->getSetting('default_image')['uuid'];
+       $image = Drupal::service('entity.repository')->loadEntityByUuid('file', $image_uuid);
+       if(!empty($image)){
+      // $variables['inner_banner_image'] = Drupal::service('file_url_generator')->generateString($image->getFileUri());
+       $variables['inner_banner_image'] = Drupal::service('file_url_generator')->generateString($image->getFileUri());
+     }
+    }
+   }
+  }
+  }
+}
+}
+
+/**
+   * Implements hook_preprocess_html().
+   */
+  function cvp_preprocess_html(&$variables) {
+    // Fetches the current URL path.
+    $current_path = \Drupal::service('path.current')->getPath();
+    switch ($current_path) {
+      case "/new-at-cvp":
+        $variables['attributes']['class'][] = 'path-what-s-new-at-cvp';
+        break;
+		
+      case "/peer-reviewed-publications":
+        $variables['attributes']['class'][] = 'path-publications-view';
+        break;
+
+      default:
+        break;
+    }
+  }
+  
+  /**
+* Implements hook_preprocess_block()
+* To add the Banner title dynamically based on Parent item.
+*/
+  function cvp_preprocess_node(&$variables) {
+	  
+	  $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
+	  $user_role = $roles[0];
+	  $nodes = \Drupal::request()->attributes->get('node');
+  
+    if ($user_role == 'anonymous') {
+	
+	   if (gettype($nodes) != 'string') {
+ 
+       $nid = $nodes->id();
+       $typeName = $nodes->bundle();
+	     $currentnode = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+       $alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/'.$nid);
+	
+	    
+		if($typeName == 'blog_post') {
+		      
+       $redirect = "https://injury.research.chop.edu/".'/node/'.$nid;
+			 $response = new Symfony\Component\HttpFoundation\RedirectResponse($redirect);
+			 \Drupal::service('page_cache_kill_switch')->trigger();
+       $response->send();	
+	    }
+     // else{
+		//
+		 //  $redirect = "https://violence.chop.edu/".'/node/'.$nid;
+		//	 $response = new Symfony\Component\HttpFoundation\RedirectResponse($redirect);
+		//	 \Drupal::service('page_cache_kill_switch')->trigger();
+     //   $response->send();
+		//
+	   //     }
+   
+    
+      
+       } 
+    }
+}

@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * DB benchmark result table.
+ */
+#}
+<h4>{{ 'DB Benchmark:'|t }}</h4>
+<table>
+  <thead>
+    <tr>
+      <th>{{ 'Total'|t }}</th>
+      <th>{{ 'Create'|t }}</th>
+      <th>{{ 'Insert'|t }}</th>
+      <th>{{ 'Select'|t }}</th>
+      <th>{{ 'Drop'|t }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>{{ value.total }}</strong>s</td>
+      <td>{{ value.create_tables }}s</td>
+      <td>{{ value.fill_tables }}s</td>
+      <td>{{ value.run_queries }}s</td>
+      <td>{{ value.drop_tables }}s</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function cpce_profiles_install()
+{
+    // Define a queue for importing nodes.
+    \Drupal::queue('cpce_profiles_import_queue')->createQueue();
+}
+
+
+?>

@@ -1,0 +1,14 @@
+locale.translate_page:
+  route_name: performance_profiler.settings
+  base_route: performance_profiler.settings
+  title: 'Settings'
+
+performance_profiler.run:
+  route_name: performance_profiler.run
+  base_route: performance_profiler.settings
+  title: 'Benchmarks'
+
+performance_profiler.database:
+  route_name: performance_profiler.database
+  base_route: performance_profiler.settings
+  title: 'Database actions'

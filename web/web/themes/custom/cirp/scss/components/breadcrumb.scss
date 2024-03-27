@@ -1,0 +1,36 @@
+.breadcrumb {
+  padding: 0px;
+  margin-bottom: 35px;
+  background: transparent;
+  li {
+    a {
+      font-family: rubrikregular;
+      color: #42b4e3;
+    }
+    &.breadcrumb-item {
+      &:last-child {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        a {
+          color: #005587;
+        }
+      }
+    }
+  }
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+  color: #42b4e3;
+  content: "\f105";
+  font: normal normal normal 20px/1 FontAwesome;
+}
+
+nav {
+  &.container {
+    padding: 0;
+  }
+}

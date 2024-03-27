@@ -1,0 +1,311 @@
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+//
+// Color system
+//
+
+// stylelint-disable
+
+$white: #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+
+$grays: () !default;
+$grays: map-merge(
+  (
+    "100": $gray-100,
+    "200": $gray-200,
+    "300": $gray-300,
+    "400": $gray-400,
+    "500": $gray-500,
+    "600": $gray-600,
+    "700": $gray-700,
+    "800": $gray-800,
+    "900": $gray-900,
+  ),
+  $grays
+);
+
+$blue: #26778b !default;
+$indigo: #005587 !default;
+$purple: #6f42c1 !default;
+$pink: #d01c65 !default;
+$red: #dc3545 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #28a745 !default;
+$teal: #20c997 !default;
+$cyan: #17a2b8 !default;
+
+$colors: () !default;
+$colors: map-merge(
+  (
+    "blue": $blue,
+    "indigo": $indigo,
+    "purple": $purple,
+    "pink": $pink,
+    "red": $red,
+    "orange": $orange,
+    "yellow": $yellow,
+    "green": $green,
+    "teal": $teal,
+    "cyan": $cyan,
+    "white": $white,
+    "gray": $gray-600,
+    "gray-dark": $gray-800,
+  ),
+  $colors
+);
+
+$primary: $indigo !default;
+$secondary: $gray-600 !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-100 !default;
+$dark: $gray-800 !default;
+
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    "primary": $primary,
+    "secondary": $secondary,
+    "success": $success,
+    "info": $info,
+    "warning": $warning,
+    "danger": $danger,
+    "light": $light,
+    "dark": $dark,
+  ),
+  $theme-colors
+);
+// stylelint-enable
+
+// Set a specific jump point for requesting color jumps
+$theme-color-interval: 8% !default;
+
+// The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
+$yiq-contrasted-threshold: 150 !default;
+
+// Customize the light and dark text colors for use in our YIQ color contrast function.
+$yiq-text-dark: $gray-900 !default;
+$yiq-text-light: $white !default;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-caret: true !default;
+$enable-rounded: true !default;
+$enable-shadows: false !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-hover-media-query: false !default; // Deprecated, no longer affects any compiled CSS
+$enable-grid-classes: true !default;
+$enable-print-styles: true !default;
+
+// styleguide colors
+
+$color-primary: #26778b;
+$blue-dark: #005587;
+$blue-light: #33a0bb;
+$blue-lighten: #eaf6f9;
+$color-secondary: #9a8b7d;
+$gray-dark: #786452;
+$gray-light: #e4e0dc;
+$gray-lighten: #f2efec;
+$green: #799a3e;
+$green-light: #e2e7cf;
+$pink: #d01c65;
+$pink-light: #fde8f2;
+
+$primary-font: 16px;
+$navtext-font: 18px;
+$footer-font: 14px;
+$heading1: 30px;
+$heading2: 22px;
+$body-lineheight: 1.4;
+
+// custom font imports
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap");
+@font-face {
+  font-family: rubrikbold;
+  src: url(../fonts/rubrik-bold-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-bold-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubriklight;
+  src: url(../fonts/rubrik-light-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-light-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubrikmedium;
+  src: url(../fonts/rubrik-medium-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-medium-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubrikregular;
+  src: url(../fonts/rubrik-regular-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-regular-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: rubriksemibold;
+  src: url(../fonts/rubrik-semibold-webfont.woff2) format("woff2"),
+    url(../fonts/rubrik-semibold-webfont.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: Georgia, "Times New Roman", Times, serif !default;
+$font-family: rubrikregular !default;
+$font-family-base: rubrikregular !default;
+$font-family-bold: rubrikbold !default;
+$font-family-light: rubriklight !default;
+$font-family-medium: rubrikmedium !default;
+$font-family-semibold: rubriksemibold !default;
+
+// stylelint-enable value-keyword-case
+$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-lg: ($font-size-base * 1.25) !default;
+$font-size-sm: ($font-size-base * 0.875) !default;
+
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+
+$font-weight-base: $font-weight-normal !default;
+$line-height-base: 1.5 !default;
+
+$h1-font-size: $font-size-base * 2.5 !default;
+$h2-font-size: $font-size-base * 1.875 !default;
+$h3-font-size: $font-size-base * 1.25 !default;
+$h4-font-size: $font-size-base * 1.5 !default;
+$h5-font-size: $font-size-base * 1.25 !default;
+$h6-font-size: $font-size-base !default;
+
+$headings-font-family: $font-family !default;
+$headings-font-weight: 500 !default;
+$headings-line-height: 1.2 !default;
+$headings-color: inherit !default;
+
+// defaultlinkcolors
+
+$link-color: #26778b !default;
+$link-hover-color: #799a3e !default;
+
+$text-color: #786452;
+
+
+:root {
+
+  /* Colors: */
+  --unnamed-color-005586: #005586;
+  --unnamed-color-665546: #665546;
+  --unnamed-color-786452: #786452;
+  --unnamed-color-ffffff: #FFFFFF;
+  --unnamed-color-d01c65: #D01C65;
+  --secondary-005587: #005587;
+  --unnamed-color-f2efec: #F2EFEC;
+  --primary-linkcolor-26778b: #26778B;
+  --unnamed-color-799a3e: #799A3E;
+  --unnamed-color-9a8b7d: #9A8B7D;
+  --e4e0dc-placeholdercolor: #E4E0DC;
+  --unnamed-color-33a0bb: #33A0BB;
+  --eaf6f9-shade: #EAF6F9;
+
+  /* Font/text values */
+  --unnamed-font-family-rubrik: Rubrik;
+  --unnamed-font-family-georgia: Georgia;
+  --unnamed-font-style-medium: Medium;
+  --unnamed-font-style-regular: Regular;
+  --unnamed-font-size-16: 16px;
+  --unnamed-font-size-20: 20px;
+  --unnamed-font-size-24: 24px;
+  --unnamed-font-size-30: 30px;
+  --unnamed-font-size-40: 40px;
+  --unnamed-character-spacing-0: 0px;
+  --unnamed-line-spacing-24: 24px;
+  --unnamed-line-spacing-26: 26px;
+  --unnamed-line-spacing-28: 28px;
+  --unnamed-line-spacing-36: 36px;
+  --unnamed-line-spacing-47: 47px;
+  --unnamed-text-transform-uppercase: uppercase;
+  }
+
+  /* Character Styles */
+  .rubrik-—-20pt-heading4 {
+  font-family: var(--unnamed-font-family-rubrik);
+  font-style: var(--unnamed-font-style-medium);
+  font-size: var(--unnamed-font-size-20);
+  line-height: var(--unnamed-line-spacing-24);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(---005587-secondary);
+  }
+  .rubrik-—-24pt-heading3 {
+  font-family: var(--unnamed-font-family-rubrik);
+  font-style: var(--unnamed-font-style-medium);
+  font-size: var(--unnamed-font-size-24);
+  line-height: var(--unnamed-line-spacing-28);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-005586);
+  }
+  .rubrik-—-30pt-heading2 {
+  font-family: var(--unnamed-font-family-rubrik);
+  font-style: var(--unnamed-font-style-medium);
+  font-size: var(--unnamed-font-size-30);
+  line-height: var(--unnamed-line-spacing-36);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-005586);
+  text-transform: var(--unnamed-text-transform-uppercase);
+  }
+  .rubrik-—-40pt-heading1 {
+  font-family: var(--unnamed-font-family-rubrik);
+  font-style: var(--unnamed-font-style-regular);
+  font-size: var(--unnamed-font-size-40);
+  line-height: var(--unnamed-line-spacing-47);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(---26778b-primary-linkcolor);
+  text-transform: var(--unnamed-text-transform-uppercase);
+  }
+  .rubrik-—-40pt-heading1 {
+  font-family: var(--unnamed-font-family-rubrik);
+  font-style: var(--unnamed-font-style-regular);
+  font-size: var(--unnamed-font-size-40);
+  line-height: var(--unnamed-line-spacing-26);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-ffffff);
+  text-transform: var(--unnamed-text-transform-uppercase);
+  }
+  .rubrik-—-16pt-bodytext {
+  font-family: var(--unnamed-font-family-georgia);
+  font-style: var(--unnamed-font-style-regular);
+  font-size: var(--unnamed-font-size-16);
+  line-height: var(--unnamed-line-spacing-26);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-665546);
+  }

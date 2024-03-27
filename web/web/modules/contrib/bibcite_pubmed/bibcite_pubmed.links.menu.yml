@@ -1,0 +1,5 @@
+bibcite_pubmed.lookup:
+  title: 'PubMed lookup'
+  parent: entity.bibcite_reference.collection
+  route_name: bibcite_pubmed.lookup
+  weight: 44
