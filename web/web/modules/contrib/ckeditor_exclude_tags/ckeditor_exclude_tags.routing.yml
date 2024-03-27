@@ -1,7 +1,0 @@
-ckeditor_exclude.admin_settings:
-  path: '/admin/config/content/exclude-tags'
-  defaults:
-    _form: '\Drupal\ckeditor_exclude_tags\Form\CkeditorSettings'
-    _title: 'Ckeditor exclude tags'
-  requirements:
-    _permission: 'administer filters'

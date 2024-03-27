@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <g id="Playbutton" transform="translate(0.706 0.707)">
+    <g id="Ellipse" transform="translate(-0.706 -0.707)" fill="rgba(255,255,255,0)" stroke="#d01c65" stroke-width="5">
+      <circle cx="30" cy="30" r="30" stroke="none"/>
+      <circle cx="30" cy="30" r="27.5" fill="none"/>
+    </g>
+    <path id="Play" d="M12.786,4.42a3,3,0,0,1,5.177,0L28.1,21.734a3,3,0,0,1-2.589,4.516H5.234a3,3,0,0,1-2.589-4.516Z" transform="translate(45.794 12.793) rotate(90)" fill="#d01c65"/>
+  </g>
+</svg>
